@@ -4,7 +4,16 @@
 * Date       :
 * Description:
 *-----------------------------------------------------------
-    ORG    $1000
+                ORG     $1000
+            
+            INCLUDE "CONST.X68"
+            INCLUDE "SYSCONST.X68"
+            INCLUDE "CIRCLE.X68"
+            INCLUDE "VAR.X68"
+            INCLUDE "SCORE.X68"
+            INCLUDE "SYSVAR.X68"
+
+
 START:                  ; first instruction of program
 
 * Put program code here
