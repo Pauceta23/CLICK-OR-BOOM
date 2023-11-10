@@ -16,10 +16,6 @@ DRAWCIRC:
         TRAP    #15             ;SET FILL COLOR
 
         MOVE.B  #88,D0
-        CLR.L   D1
-        CLR.L   D2
-        CLR.L   D3
-        CLR.L   D4
         JSR     .GETCORD
         TRAP    #15             ;DRAW CIRCLE
         RTS
@@ -32,18 +28,28 @@ DRAWCIRC:
         SUB.W   #RADINIC,D1
     
     ;UPPER Y
-        MOVE.W  #SCRHEIGH/2,D3
-        SUB.W   #RADINIC,D3
+        MOVE.W  #SCRHEIGH/2,D2
+        SUB.W   #RADINIC,D2
     
     ;RIGHT X
-        MOVE.W  #SCRWIDTH/2,D2
-        ADD.W   #RADINIC,D2
+        MOVE.W  #SCRWIDTH/2,D3
+        ADD.W   #RADINIC,D3
     
     ;LOWER Y
-        MOVE.W  #SCRHEIGH,D4
-        SUB.W   #RADINIC,D4
+        MOVE.W  #SCRHEIGH/2,D4
+        ADD.W   #RADINIC,D4
         RTS
     
+
+
+
+
+
+
+
+
+
+
 
 *~Font name~Fixedsys~
 *~Font size~9~
