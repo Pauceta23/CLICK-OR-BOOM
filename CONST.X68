@@ -7,7 +7,7 @@
 RADINIC EQU 5                   ;CIRCLES INICIAL RADIUS
 RADFINA EQU 20                  ;CIRCLES FINAL RADIUS
 COLFINA EQU $00000000           ;CIRCLES FINAL COLOR
-CIRCHIT EQU 5                   ;NUMBER OF CIRCLES TO INCREASE GROWTH SPEED
+
 
 ; --- SCORE RELATED CONSTANTS --------------------------------------------------
 
