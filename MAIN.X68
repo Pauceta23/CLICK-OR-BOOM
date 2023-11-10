@@ -13,9 +13,9 @@
             INCLUDE "CONST.X68"
             INCLUDE "SYSCONST.X68"
             INCLUDE "CIRCLE.X68"
-            INCLUDE "VAR.X68"
+            INCLUDE "VARS.X68"
             INCLUDE "SCORE.X68"
-            INCLUDE "SYSVAR.X68"
+            INCLUDE "SYSVARS.X68"
 
 
 START:                  ; first instruction of program
