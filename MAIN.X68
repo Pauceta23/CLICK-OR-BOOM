@@ -1,8 +1,12 @@
 *-----------------------------------------------------------
 * Title      : PRACTICA GINAL 23-24
-* Written by :
-* Date       :
-* Description:
+* Written by : PAU BELMONTE & ENRIQUE GRAU
+* Date       : 
+* Description: El juego consiste en circulos que salen de
+* manera aleatoria y van creciendo con el tiempo, el objetivo
+* es clicarlos con el ratón antes de que lleguen a su tamaño
+* final y pierdas una vida. Cada cierto tiempo, estos circulos
+* crecen más rapido complicandolo más.
 *-----------------------------------------------------------
                 ORG     $1000
             
