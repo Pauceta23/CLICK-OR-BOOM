@@ -3,6 +3,7 @@
 ; ==============================================================================
 
 ; --- SCREEN RELATED CONSTANTS -------------------------------------------------
+; RESOLUCION FINAL W:1280 H:640
 
 SCRWIDTH    EQU     640                     ; SCREEN WIDTH
 SCRHEIGH    EQU     480                     ; SCREEN HEIGHT
