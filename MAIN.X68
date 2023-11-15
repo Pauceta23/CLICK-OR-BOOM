@@ -1,5 +1,5 @@
 *-----------------------------------------------------------
-* Title      : PRACTICA GINAL 23-24
+* Title      : PRACTICA FINAL 23-24
 * Written by :
 * Date       :
 * Description:
@@ -11,28 +11,47 @@
             INCLUDE "CIRCLE.X68"
             INCLUDE "VARS.X68"
             ;INCLUDE "SCORE.X68"
-            INCLUDE "SYSVARS.X68"
             INCLUDE "SYSTEM.X68"
 
 
-START:            
-            CLR     (CIRCVEL)
-            MOVE.W  #4,D5
+START:      
+;---- INITIALIZATION ---------------------------------------------------------
+            ORI     #$0700,SR   
+            CLR     (CIRCRAD)   
             JSR     SYSINIT
             JSR     CIRCINIT
 .LOOP:      
+;---- UPDATE -----------------------------------------------------------------
+;READ INPUT DEVICES
+
+    ;RELLENAR CON LECTURA DEL RATÓN O TECLADO
+    
+;UPDATE GAME ELEMENTS
             ADDQ.W  #2,(CIRCRAD)
+            ;AÑADIR EL PROCESAMIENTO DE LAS LECTURAS ANTES REALIZADAS
+
+;---- SYNCRONIZATION ---------------------------------------------------------
+    ;RELLENAR CON EL VÍDEO TUT14
+
+;---- DRAWING ----------------------------------------------------------------
+
             JSR     DRAWCIRC
+            ;JSR     DRAWSCOR
+            ;TRAP    #0         ;UPDATE DOUBLE BUFFER
+            
+;COMO ESTÁ AHORA EL PROGRAMA ACABA AL LLEGAR LA PELOTA A SU RADIO MÁXIMO,
+;CAMBIAR ESTO POR QUE EL JUGADOR PIERDA UNA VIDA
+
             CMPI.W  #RADFINA,CIRCRAD
             BLT     .LOOP
+            BRA     START
 
-* Put program code here
-
-    SIMHALT             ; halt simulator
+            SIMHALT             
             
-* Put variables and constants here
+            INCLUDE "SYSVARS.X68"
 
-    END    START        ; last line of source
+            END    START        
+
 
 *~Font name~Courier New~
 *~Font size~10~

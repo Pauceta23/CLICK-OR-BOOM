@@ -4,6 +4,9 @@
 
 SYSINIT:
             JSR SCRINIT
+            MOVE.W  SR,-(A7)
+            ANDI.W  #$D8FF,(A7)               ; ENABLE INTS
+            RTE
 
 
 
@@ -15,7 +18,6 @@ SCRINIT:
 ; OUTPUT   - NONE
 ; MODIFIES - D0,D1,D2,D3
 ; -----------------------------------------------------------------------------
-            ;ORI.W   #$0700,SR               ; DISABLE ALL INT
             ;MOVE.L  #SCRUPD,($80+SCRTRAP*4) ; INSTALL TRAP
             MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1 ; SET RESOLUTION
             MOVE.B  #33,D0
@@ -42,8 +44,9 @@ SCRINIT:
 *           TRAP    #15
 *           CLR.B   (SCRINTCT)              ; PREPARE INTERRUPT FLAG
 *           CLR.B   (SCRCYCCT)              ; PREPARE CYCLE COUNTER
-*           ANDI.W  #$F8FF,SR               ; ENABLE INTS
+            
             RTS
+
 
 *~Font name~Fixedsys~
 *~Font size~9~
