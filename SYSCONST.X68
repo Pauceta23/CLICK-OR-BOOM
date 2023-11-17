@@ -4,9 +4,10 @@
 
 ; --- SCREEN RELATED CONSTANTS -------------------------------------------------
 
-SCRWIDTH    EQU     640             ; SCREEN WIDTH
-SCRHEIGH    EQU     480             ; SCREEN HEIGHT
-FRAMRATE    EQU     100              ; 20 = 50FPS, 10 = 100FPS
+SCRWIDTH    EQU     1280             ; SCREEN WIDTH
+SCRHEIGH    EQU     640             ; SCREEN HEIGHT
+FRAMRATE    EQU     10              ; 20 = 50FPS, 10 = 100FPS
+
 
 
 

@@ -14,6 +14,7 @@ CIRCINIT:
 
         ADD.W   #RADINIC,(CIRCRAD)
         CLR.W  (CIRCVEC)
+        RTS
     
         
     
@@ -69,6 +70,7 @@ DRAWCIRC:
 *~Font size~9~
 *~Tab type~1~
 *~Tab size~4~
+
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~

@@ -5,8 +5,8 @@
 ; --- CERCLES RELATED CONSTANTS ------------------------------------------------
 ;RADINIC: 15 RADFINA:
         
-RADINIC EQU 64                   ;CIRCLES INICIAL RADIUS
-RADFINA EQU 20                  ;CIRCLES FINAL RADIUS
+RADINIC EQU 5                   ;CIRCLES INICIAL RADIUS
+RADFINA EQU 100                  ;CIRCLES FINAL RADIUS
 COLFINA EQU $00FF0000           ;CIRCLES FINAL COLOR
 CIRCHIT EQU 5                   ;NUMBER OF CIRCLES TO INCREASE GROWTH SPEED
 
@@ -73,6 +73,7 @@ RANDY
     DC.W      509, 201, 220, 246, 42
     DC.W      512, 266, 314, 100, 146
     DC.W      147, 353, 446, 204, 26 
+
 
 *~Font name~Courier New~
 *~Font size~10~
