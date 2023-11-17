@@ -18,11 +18,13 @@ CIRCINIT:
         
     
 DRAWCIRC:
-
+       
+        MOVEM.L D0-D6/A0-A1,-(A7)
         MOVE.B  #88,D0
         ADDQ.W  #2,(CIRCRAD)
         JSR     .GETCORD
         TRAP    #15             ;DRAW CIRCLE
+        MOVEM.L (A7)+,D0-D6/A0-A1
         RTS
 
 
