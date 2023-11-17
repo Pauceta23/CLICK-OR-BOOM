@@ -12,8 +12,8 @@ CIRCINIT:
         MOVE.L  #$000000FF,D1
         TRAP    #15             ;SET FILL COLOR
 
-        MOVE.B  #88,D0
         ADD.W   #RADINIC,(CIRCRAD)
+        CLR.W  (CIRCVEC)
     
         
     
@@ -28,20 +28,25 @@ DRAWCIRC:
 
 .GETCORD:
 
+        LEA RANDX,A0
+        LEA RANDY,A1
+        ADDQ.W   #2,(CIRCVEC)
+        MOVE.W  (CIRCVEC),D6
+
     ;LEFT X
-        MOVE.W  #SCRWIDTH/2,D1
+        MOVE.W  (A0,D6.W),D1
         SUB.W   (CIRCRAD),D1
     
     ;UPPER Y
-        MOVE.W  #SCRHEIGH/2,D2
+        MOVE.W  (A1,D6.W),D2
         SUB.W   (CIRCRAD),D2
     
     ;RIGHT X
-        MOVE.W  #SCRWIDTH/2,D3
+        MOVE.W  (A0,D6.W),D3
         ADD.W   (CIRCRAD),D3
     
     ;LOWER Y
-        MOVE.W  #SCRHEIGH/2,D4
+        MOVE.W  (A1,D6.W),D4
         ADD.W   (CIRCRAD),D4
         RTS
     
@@ -58,6 +63,10 @@ DRAWCIRC:
 
 
 
+*~Font name~Fixedsys~
+*~Font size~9~
+*~Tab type~1~
+*~Tab size~4~
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~
