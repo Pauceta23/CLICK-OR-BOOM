@@ -4,38 +4,41 @@
 * Date       :
 * Description:
 *-----------------------------------------------------------
-                ORG     $1000
+            ORG     $1000
             
             INCLUDE "CONST.X68"
             INCLUDE "SYSCONST.X68"
             INCLUDE "CIRCLE.X68"
-            INCLUDE "VARS.X68"
             ;INCLUDE "SCORE.X68"
             INCLUDE "SYSTEM.X68"
 
 
 START:      
 ;---- INITIALIZATION ---------------------------------------------------------
-            ORI     #$0700,SR   
-            CLR     (CIRCRAD)   
+            ORI     #$0700,SR     
             JSR     SYSINIT
             JSR     CIRCINIT
 .LOOP:      
 ;---- UPDATE -----------------------------------------------------------------
+
 ;READ INPUT DEVICES
 
-    ;RELLENAR CON LECTURA DEL RATÓN O TECLADO
+    ******RELLENAR CON LECTURA DEL RATÓN O TECLADO
     
 ;UPDATE GAME ELEMENTS
             ADDQ.W  #2,(CIRCRAD)
-            ;AÑADIR EL PROCESAMIENTO DE LAS LECTURAS ANTES REALIZADAS
+    ******AÑADIR EL PROCESAMIENTO DE LAS LECTURAS ANTES REALIZADAS
 
 ;---- SYNCRONIZATION ---------------------------------------------------------
-    ;RELLENAR CON EL VÍDEO TUT14
+
+.WINT       TST.B   (SCRINTCT)
+            BEQ     .WINT
+            CLR.B   (SCRINTCT)
 
 ;---- DRAWING ----------------------------------------------------------------
-
+            
             JSR     DRAWCIRC
+            TRAP    #0
             ;JSR     DRAWSCOR
             ;TRAP    #0         ;UPDATE DOUBLE BUFFER
             
@@ -44,13 +47,14 @@ START:
 
             CMPI.W  #RADFINA,CIRCRAD
             BLT     .LOOP
-            BRA     START
 
             SIMHALT             
             
+            INCLUDE "VARS.X68"
             INCLUDE "SYSVARS.X68"
 
-            END    START        
+            END     START        
+
 
 
 *~Font name~Courier New~
