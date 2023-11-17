@@ -6,6 +6,8 @@ SYSINIT:
             JSR SCRINIT
             MOVE.L  #BUFFUPD,($80)      ;INSTALLS A ROUTINE IN TRAP #0
             MOVE.L  #SCRUPD, ($64)
+            CLR.B   (FRAMCONT)
+            MOVE.W   #1,(CIRCVEL)
             MOVE.W  SR,-(A7)
             ANDI.W  #$D8FF,(A7)               ; ENABLE INTS
             RTE
@@ -95,6 +97,7 @@ SCRUPD
             ADDQ.B  #1,(SCRINTCT)
             RTE
             
+
 
 
 *~Font name~Fixedsys~

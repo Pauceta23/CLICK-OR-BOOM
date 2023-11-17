@@ -26,7 +26,14 @@ START:
     ******RELLENAR CON LECTURA DEL RATÓN O TECLADO
     
 ;UPDATE GAME ELEMENTS
-            ADDQ.W  #2,(CIRCRAD)
+            MOVE.W  D0,-(A7)
+            ADDQ.B  #1,(FRAMCONT)
+            CMP.B #1,(FRAMCONT)
+            BNE .WINT
+            MOVE.W  (CIRCVEL),D0
+            ADD.W  D0,(CIRCRAD)
+            CLR.B   (FRAMCONT)
+            MOVE.W  (A7)+,D0
     ******AÑADIR EL PROCESAMIENTO DE LAS LECTURAS ANTES REALIZADAS
 
 ;---- SYNCRONIZATION ---------------------------------------------------------
@@ -54,6 +61,7 @@ START:
             INCLUDE "SYSVARS.X68"
 
             END     START        
+
 
 
 

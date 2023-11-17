@@ -14,6 +14,7 @@ CIRCINIT:
 
         ADD.W   #RADINIC,(CIRCRAD)
         CLR.W  (CIRCVEC)
+        ADDQ.W   #2,(CIRCVEC)
         RTS
     
         
@@ -22,7 +23,6 @@ DRAWCIRC:
        
         MOVEM.L D0-D6/A0-A1,-(A7)
         MOVE.B  #88,D0
-        ADDQ.W  #2,(CIRCRAD)
         JSR     .GETCORD
         TRAP    #15             ;DRAW CIRCLE
         MOVEM.L (A7)+,D0-D6/A0-A1
@@ -33,7 +33,7 @@ DRAWCIRC:
 
         LEA RANDX,A0
         LEA RANDY,A1
-        ADDQ.W   #2,(CIRCVEC)
+        
         MOVE.W  (CIRCVEC),D6
 
     ;LEFT X
@@ -70,6 +70,8 @@ DRAWCIRC:
 *~Font size~9~
 *~Tab type~1~
 *~Tab size~4~
+
+
 
 *~Font name~Fixedsys~
 *~Font size~9~
