@@ -10,6 +10,9 @@ SYSINIT:
             MOVE.W   #1,(CIRCVEL)
             MOVE.W  SR,-(A7)
             ANDI.W  #$D8FF,(A7)               ; ENABLE INTS
+            MOVE.W  #60,D0
+            MOVE.W  #3<<8|1,D1
+            TRAP    #15
             RTE
 
 
@@ -97,6 +100,24 @@ SCRUPD
             ADDQ.B  #1,(SCRINTCT)
             RTE
             
+            
+;-----------------------------------------------------------------------------             
+READMOU
+;READ MOUSE VARIABLES
+;            
+;
+;
+;----------------------------------------------------------------------------- 
+            MOVEM.W  D0-D1,-(A7)
+            MOVE.W  #61,D0
+            MOVE.W  #2,D1
+            TRAP    #15
+            
+            MOVEM.W (A7)+,D0-D1
+            RTS
+            
+            
+
 
 
 

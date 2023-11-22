@@ -23,15 +23,18 @@ START:
 
 ;READ INPUT DEVICES
 
+            JSR     READMOU
+
+
     ******RELLENAR CON LECTURA DEL RATÓN O TECLADO
     
 ;UPDATE GAME ELEMENTS
             MOVE.W  D0,-(A7)
-            ADDQ.B  #1,(FRAMCONT)
-            CMP.B #1,(FRAMCONT)
-            BNE .WINT
+            ADDQ.B  #2,(FRAMCONT)
+            CMP.B   #5,(FRAMCONT)
+            BGT     .WINT
             MOVE.W  (CIRCVEL),D0
-            ADD.W  D0,(CIRCRAD)
+            ADD.W   D0,(CIRCRAD)
             CLR.B   (FRAMCONT)
             MOVE.W  (A7)+,D0
     ******AÑADIR EL PROCESAMIENTO DE LAS LECTURAS ANTES REALIZADAS
@@ -61,6 +64,8 @@ START:
             INCLUDE "SYSVARS.X68"
 
             END     START        
+
+
 
 
 
