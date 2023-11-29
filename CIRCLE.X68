@@ -5,15 +5,15 @@
 CIRCINIT:
 
         MOVE.B  #80,D0
-        MOVE.L  #$000000FF,D1
+        MOVE.L  #RED,D1
         TRAP    #15             ;SET PEN COLOR
     
         MOVE.B  #81,D0
-        MOVE.L  #$000000FF,D1
+        MOVE.L  #RED,D1
         TRAP    #15             ;SET FILL COLOR
 
-        ADD.W   #RADINIC,(CIRCRAD)
-        CLR.W  (CIRCVEC)
+        MOVE.W   #RADINIC,(CIRCRAD)
+        CLR.W    (CIRCVEC)
         ADDQ.W   #2,(CIRCVEC)
         RTS
     
@@ -70,6 +70,7 @@ DRAWCIRC:
 *~Font size~9~
 *~Tab type~1~
 *~Tab size~4~
+
 
 
 

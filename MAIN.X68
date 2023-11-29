@@ -6,33 +6,37 @@
 *-----------------------------------------------------------
             ORG     $1000
             
+            INCLUDE "LIB/DMMCONST.X68"
             INCLUDE "CONST.X68"
             INCLUDE "SYSCONST.X68"
             INCLUDE "CIRCLE.X68"
             ;INCLUDE "SCORE.X68"
             INCLUDE "SYSTEM.X68"
+            INCLUDE "LIB/DMMCODE.X68"
+            INCLUDE "LIB/AGLCODE.X68"
+            INCLUDE "LIB/UTLCODE.X68"
+            
 
 
 START:      
 ;---- INITIALIZATION ---------------------------------------------------------
             ORI     #$0700,SR     
             JSR     SYSINIT
+            
+.LOOP1:      
             JSR     CIRCINIT
-.LOOP:      
+.LOOP2
 ;---- UPDATE -----------------------------------------------------------------
 
 ;READ INPUT DEVICES
 
-            JSR     READMOU
-
-
-    ******RELLENAR CON LECTURA DEL RATÓN O TECLADO
+            JSR READMOU
     
 ;UPDATE GAME ELEMENTS
             MOVE.W  D0,-(A7)
-            ADDQ.B  #2,(FRAMCONT)
-            CMP.B   #5,(FRAMCONT)
-            BGT     .WINT
+            ADDQ.B  #1,(FRAMCONT)
+            CMP.B   #1,(FRAMCONT)
+            BNE     .WINT
             MOVE.W  (CIRCVEL),D0
             ADD.W   D0,(CIRCRAD)
             CLR.B   (FRAMCONT)
@@ -48,22 +52,25 @@ START:
 ;---- DRAWING ----------------------------------------------------------------
             
             JSR     DRAWCIRC
-            TRAP    #0
             ;JSR     DRAWSCOR
-            ;TRAP    #0         ;UPDATE DOUBLE BUFFER
+            TRAP    #0       ;UPDATE DOUBLE BUFFER
             
 ;COMO ESTÁ AHORA EL PROGRAMA ACABA AL LLEGAR LA PELOTA A SU RADIO MÁXIMO,
 ;CAMBIAR ESTO POR QUE EL JUGADOR PIERDA UNA VIDA
-
+            
             CMPI.W  #RADFINA,CIRCRAD
-            BLT     .LOOP
+            BLT     .LOOP2
+*            BRA     .LOOP1
 
             SIMHALT             
             
             INCLUDE "VARS.X68"
             INCLUDE "SYSVARS.X68"
+            INCLUDE "LIB/DMMVARS.X68"
+            INCLUDE "LIB/UTLVARS.X68"
 
             END     START        
+
 
 
 
