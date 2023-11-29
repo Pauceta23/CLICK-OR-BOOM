@@ -42,7 +42,7 @@ SCRINIT:
             MOVE.B  #11,D0
             TRAP    #15
             
-            MOVE.B  #32,D0                    ;CREACIÓ DE TIMED INT
+            MOVE.B  #32,D0                    ;CREACIÃ“ DE TIMED INT
             MOVE.B  #6,D1
             MOVE.B  #$81,D2                   ;8(HABILITAR INT) 1(QUINA INT)
             MOVE.L  #1000/FRAMRATE,D3         ;FER AQUESTA INT CADA X ms
@@ -96,6 +96,22 @@ SCRUPD
 ;-----------------------------------------------------------------------------
             ADDQ.B  #1,(SCRINTCT)
             RTE
+
+
+;-----------------------------------------------------------------------------             
+READMOU
+;READ MOUSE VARIABLES
+;            
+;
+;
+;----------------------------------------------------------------------------- 
+            MOVEM.W  D0-D1,-(A7)
+            MOVE.W  #61,D0
+            MOVE.W  #2,D1
+            TRAP    #15
+            
+            MOVEM.W (A7)+,D0-D1
+            RTS
             
 
 
