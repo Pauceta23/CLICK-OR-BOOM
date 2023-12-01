@@ -4,8 +4,8 @@
 
 SYSINIT:
             JSR     SCRINIT
-            MOVE.L  #BUFFUPD,($80)      ;INSTALLS A ROUTINE IN TRAP #0
-            MOVE.L  #SCRUPD, ($64)
+            MOVE.L  #BUFFUPD,($80)      ; INSTALLS A ROUTINE IN TRAP #0
+            MOVE.L  #SCRUPD, ($64)      ; INSTALLS A TIMED ROUTINE
             CLR.B   (FRAMCONT)
             MOVE.W  #1,(CIRCVEL)
 
@@ -14,7 +14,7 @@ SYSINIT:
             TRAP    #15
             
             MOVE.W  SR,-(A7)
-            ANDI.W  #$D8FF,(A7)          ; ENABLE INTS
+            ANDI.W  #$D8FF,(A7)         ; ENABLE INTS
             RTE
 
 
@@ -27,7 +27,7 @@ SCRINIT:
 ; -----------------------------------------------------------------------------
             MOVEM.W D0-D1,-(A7)
             
-            ;MOVE.L  #SCRUPD,($84) ; INSTALL TRAP
+*            MOVE.L  #SCRUPD,($84) ; INSTALL TRAP
             
             MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1 ; SET RESOLUTION
             MOVE.B  #33,D0
@@ -98,7 +98,7 @@ SCRUPD
 ;
 ;
 ;-----------------------------------------------------------------------------
-            ADDQ.B  #1,(SCRINTCT)
+            ADDQ.B  #1,(SCRINTCT)     ; INFORMING THAT IT HAS BEEN EXECUTED
             RTE
             
             
@@ -119,6 +119,7 @@ READMOU
             RTS
             
             
+
 
 
 
