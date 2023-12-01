@@ -6,7 +6,8 @@
 
 SCRWIDTH    EQU     1280             ; SCREEN WIDTH
 SCRHEIGH    EQU     640             ; SCREEN HEIGHT
-FRAMRATE    EQU     60              ; 20 = 50FPS, 10 = 100FPS
+FRAMRATE    EQU     60              
+
 
 
 

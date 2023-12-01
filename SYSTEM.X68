@@ -3,16 +3,18 @@
 ;=====================================================================
 
 SYSINIT:
-            JSR SCRINIT
+            JSR     SCRINIT
             MOVE.L  #BUFFUPD,($80)      ;INSTALLS A ROUTINE IN TRAP #0
             MOVE.L  #SCRUPD, ($64)
             CLR.B   (FRAMCONT)
-            MOVE.W   #1,(CIRCVEL)
-            MOVE.W  SR,-(A7)
-            ANDI.W  #$D8FF,(A7)               ; ENABLE INTS
+            MOVE.W  #1,(CIRCVEL)
+
             MOVE.W  #60,D0
             MOVE.W  #3<<8|1,D1
             TRAP    #15
+            
+            MOVE.W  SR,-(A7)
+            ANDI.W  #$D8FF,(A7)          ; ENABLE INTS
             RTE
 
 
@@ -49,7 +51,6 @@ SCRINIT:
             MOVE.B  #6,D1
             MOVE.B  #$81,D2                   ;8(HABILITAR INT) 1(QUINA INT)
             MOVE.L  #1000/FRAMRATE,D3         ;FER AQUESTA INT CADA X ms
-            ;MOVE.L  #10,D3                    ;FER AQUESTA INT CADA X ms
             TRAP    #15
     
             CLR.B   (SCRINTCT)                                             
@@ -103,20 +104,22 @@ SCRUPD
             
 ;-----------------------------------------------------------------------------             
 READMOU
-;READ MOUSE VARIABLES
-;            
+;READS THE CURRENT STATE OF THE MOUSE, PUTS A 1 IN THE BIT0 OF D0
+;THE COORDINATES ARE WRITTEN IN D1.L HIGHER 16 BITS FOR Y AND LOWER 16 BITS FOR X
 ;
 ;
 ;----------------------------------------------------------------------------- 
-            MOVEM.W  D0-D1,-(A7)
-            MOVE.W  #61,D0
-            MOVE.W  #2,D1
+            MOVEM.W D0-D1,-(A7)         
+            
+            MOVE.B  #61,D0
+            MOVE.B  #0,D1
             TRAP    #15
             
             MOVEM.W (A7)+,D0-D1
             RTS
             
             
+
 
 
 

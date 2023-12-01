@@ -40,7 +40,6 @@ LOOP:
 
             JSR     READMOU
 
-
     ******RELLENAR CON LECTURA DEL RATÓN O TECLADO
     
 ;UPDATE GAME ELEMENTS
@@ -57,7 +56,7 @@ WINT        TST.B   (SCRINTCT)
 ;---- DRAWING ----------------------------------------------------------------
             
             ;JSR     DRAWCIRC
-            JSR      AGLPLOT
+            JSR     AGLPLOT
             TRAP    #0
             ;JSR     DRAWSCOR
             ;TRAP    #0         ;UPDATE DOUBLE BUFFER
@@ -75,6 +74,7 @@ FIN
             
 
             END     START        
+
 
 
 
