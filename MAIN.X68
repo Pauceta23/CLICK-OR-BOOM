@@ -25,21 +25,32 @@ START:
             ORI     #$0700,SR     
             JSR     SYSINIT
             JSR     DMMINIT
+            JSR     RANINIT
             MOVE.W  #3,(SCOLIFE)
             ;JSR     CIRCINIT
+             
+            LEA CIRCINIT,A1
+            LEA CIRCUPD,A2
+            LEA DRAWCIRC,A3
+            MOVE.W  #1,D0
+            ADDQ.W  #2,(CIRCVEC)
+            JSR     AGLADD
+            CLR.B   (COUNTER)
             
             
 LOOP:      
 ;---- UPDATE -----------------------------------------------------------------
 
 ;READ INPUT DEVICES
-
             JSR     READMOU
-            LEA CIRCINIT,A1
-            LEA CIRCUPD,A2
-            LEA DRAWCIRC,A3
-            MOVE.W  #1,D0
+            ADDQ.B  #1,(COUNTER)
+            CMP.B   #30,(COUNTER)
+            BNE     SALTO
+            CLR.B   (COUNTER)
+            ADDQ.W  #2,(CIRCVEC)
             JSR     AGLADD
+SALTO:
+           
 
 
     ******RELLENAR CON LECTURA DEL RATÓN O TECLADO
@@ -76,6 +87,7 @@ FIN
             
 
             END     START        
+
 
 
 

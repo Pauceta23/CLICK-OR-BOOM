@@ -16,6 +16,12 @@ SYSINIT:
             RTE
 
 
+RANINIT:
+
+        CLR.W   (CIRCVEC)
+        RTS
+
+
 ; -----------------------------------------------------------------------------
 SCRINIT:
 ; INITIALIZES THE SCREEN, SCREEN-RELATED INTERRUPT AND VARS.
@@ -117,6 +123,7 @@ READMOU
             RTS
             
             
+
 
 
 

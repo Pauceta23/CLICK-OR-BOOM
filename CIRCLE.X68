@@ -26,8 +26,8 @@ CIRCINIT:
         TRAP    #15             ;SET FILL COLOR
 
         MOVE.W   #RADINIC,(A0)
-        CLR.W  2(A0)
-        ADDQ.W   #2,2(A0)
+        MOVE.W  (CIRCVEC),2(A0)
+        
         RTS
     
 ;------------------------------------------------------------------------------        
@@ -111,6 +111,7 @@ BACK1:
 *~Font size~9~
 *~Tab type~1~
 *~Tab size~4~
+
 
 
 
