@@ -1,33 +1,28 @@
 *-----------------------------------------------------------
 * Title      : PRACTICA FINAL 23-24
-* Written by :
-* Date       :
-* Description:
+* Written by : Pau Belmonte Clemente & Enrique Grau Artigao
+* Date       : 13/12/2023
+* Description: Click the balls before they explode!
 *-----------------------------------------------------------
             ORG     $1000
             
             INCLUDE "CONST.X68"
             INCLUDE "LIB/DMMCONST.X68"
             INCLUDE "SYSCONST.X68"
-            INCLUDE "VARS.X68"
-            INCLUDE "SYSVARS.X68"
-            INCLUDE "LIB/UTLVARS.X68"
+
             INCLUDE "CIRCLE.X68"
             ;INCLUDE "SCORE.X68"
             INCLUDE "SYSTEM.X68"
             INCLUDE "LIB/DMMCODE.X68"
             INCLUDE "LIB/AGLCODE.X68"
-            
             INCLUDE "LIB/UTLCODE.X68"
-            INCLUDE "LIB/DMMVARS.X68"
 START:      
 ;---- INITIALIZATION ---------------------------------------------------------
-            ORI     #$0700,SR     
-            JSR     SYSINIT
-            JSR     DMMINIT
-            JSR     RANINIT
-            MOVE.W  #3,(SCOLIFE)
-            ;JSR     CIRCINIT
+            ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
+            JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
+            JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
+            JSR     RANINIT       ;
+            MOVE.W  #3,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
              
             LEA CIRCINIT,A1
             LEA CIRCUPD,A2
@@ -37,56 +32,52 @@ START:
             JSR     AGLADD
             CLR.B   (COUNTER)
             
-            
 LOOP:      
 ;---- UPDATE -----------------------------------------------------------------
 
-;READ INPUT DEVICES
-            JSR     READMOU
-            ADDQ.B  #1,(COUNTER)
-            CMP.B   #30,(COUNTER)
-            BNE     SALTO
-            CLR.B   (COUNTER)
-            ADDQ.W  #2,(CIRCVEC)
-            JSR     AGLADD
+            ADDQ.B  #1,(COUNTER)  ;AFEGIM 1 AL CONTADOR DE CERCLES
+            CMP.B   #30,(COUNTER) ;SI HA ARRIBAT A 30
+            BNE     SALTO         ;NO BOTA 
+            CLR.B   (COUNTER)     ;REINICIA EL COMPTADOR
+            ADDQ.W  #2,(CIRCVEC)  ;PUJA LA VELOCITAT DE CREIXEMENT DELS CERCLES
+            JSR     AGLADD        ;AFEGIM NOUS CERCLES
 SALTO:
-           
 
+;READ INPUT DEVICES
 
-    ******RELLENAR CON LECTURA DEL RATÓN O TECLADO
+            JSR     READMOU       ;LECTURA DE RATOLÍ
     
 ;UPDATE GAME ELEMENTS
-            ;JSR CIRCUPD
-            JSR AGLUPD
-    ******AÑADIR EL PROCESAMIENTO DE LAS LECTURAS ANTES REALIZADAS
 
+            JSR     AGLUPD        ;ACTUALITZAM ELS CERCLES TENINT EN COMPTE 
+                                  ;LA LECTURA DE RATOLÍ                       
 ;---- SYNCRONIZATION ---------------------------------------------------------
 
-WINT        TST.B   (SCRINTCT)
-            BEQ     WINT
+WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL 
+            BEQ     WINT          ;DE SINCRONISME I PUGUI CONTINUAR
             CLR.B   (SCRINTCT)
 
 ;---- DRAWING ----------------------------------------------------------------
             
-            ;JSR     DRAWCIRC
-            JSR      AGLPLOT
-            TRAP    #0
-            ;JSR     DRAWSCOR
-            ;TRAP    #0         ;UPDATE DOUBLE BUFFER
+            JSR      AGLPLOT      ;DIBUIXA AL BUFFER OCULT
+            TRAP     #0           ;INTERCANVIA ELS BUFFERS (OCULT<->VISIBLE)
             
 ;COMO ESTÁ AHORA EL PROGRAMA ACABA AL LLEGAR LA PELOTA A SU RADIO MÁXIMO,
 ;CAMBIAR ESTO POR QUE EL JUGADOR PIERDA UNA VIDA
 
             CMPI    #2,(SCOLIFE)
-            BEQ     FIN
-            BRA     LOOP
-FIN
+            BNE     LOOP
 
             SIMHALT             
             
-            
+            INCLUDE "VARS.X68"
+            INCLUDE "SYSVARS.X68"
+            INCLUDE "LIB/UTLVARS.X68"  
+            INCLUDE "LIB/DMMVARS.X68"
+          
 
             END     START        
+
 
 
 

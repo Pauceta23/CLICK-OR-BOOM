@@ -26,6 +26,7 @@ SCONUMB DS.W    1           ;NUMBER OF CAPTURED CERCLES
 
 
 
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

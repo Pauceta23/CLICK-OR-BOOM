@@ -1,25 +1,28 @@
+
 ;=====================================================================
 ;SYSTEM INITIALIZATION
 ;=====================================================================
 
 SYSINIT:
-            JSR SCRINIT
-            MOVE.L  #BUFFUPD,($80)      ;INSTALLS A ROUTINE IN TRAP #0
-            MOVE.L  #SCRUPD, ($64)
+            MOVEM.W  D0-D1,-(A7)
+            MOVEM.W  D2-D3,-(A7)
+
+            JSR     SCRINIT                   ; SYSTEM INIT
+            MOVE.L  #BUFFUPD,($80)            ; INSTALLS A ROUTINE IN TRAP #0
+            MOVE.L  #SCRUPD, ($64)            ; INSTALLS A TIMED ROUTINE
             CLR.B   (FRAMCONT)
             MOVE.W   #1,(CIRCVEL)
             MOVE.W  SR,-(A7)
-            ANDI.W  #$D8FF,(A7)               ; ENABLE INTS
-            MOVE.W  #60,D0
-            MOVE.W  #3<<8|1,D1
-            TRAP    #15
+            ANDI.W  #$D8FF,(A7)               ; ENABLE INTS            
+
+            MOVEM.W (A7)+, D2-D3
+            MOVEM.W (A7)+, D0-D1
+            
             RTE
-
-
 RANINIT:
 
-        CLR.W   (CIRCVEC)
-        RTS
+            CLR.W   (CIRCVEC)
+            RTS
 
 
 ; -----------------------------------------------------------------------------
@@ -29,10 +32,7 @@ SCRINIT:
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.W D0-D1,-(A7)
-            
-            ;MOVE.L  #SCRUPD,($84) ; INSTALL TRAP
-            
+                        
             MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1 ; SET RESOLUTION
             MOVE.B  #33,D0
             TRAP    #15
@@ -55,7 +55,6 @@ SCRINIT:
             MOVE.B  #6,D1
             MOVE.B  #$81,D2                   ;8(HABILITAR INT) 1(QUINA INT)
             MOVE.L  #1000/FRAMRATE,D3         ;FER AQUESTA INT CADA X ms
-            ;MOVE.L  #10,D3                    ;FER AQUESTA INT CADA X ms
             TRAP    #15
     
             CLR.B   (SCRINTCT)                                             
@@ -72,7 +71,6 @@ SCRINIT:
 *           CLR.B   (SCRINTCT)                ; PREPARE INTERRUPT FLAG
 *           CLR.B   (SCRCYCCT)                ; PREPARE CYCLE COUNTER
  
-            MOVEM.W (A7)+,D0-D1
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -114,7 +112,7 @@ READMOU
 ;
 ;
 ;----------------------------------------------------------------------------- 
-            MOVEM.W  D0-D1,-(A7)
+            MOVEM.W D0-D1,-(A7)
             MOVE.W  #61,D0
             MOVE.W  #2,D1
             TRAP    #15
@@ -123,6 +121,7 @@ READMOU
             RTS
             
             
+
 
 
 
