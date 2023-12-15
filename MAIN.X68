@@ -16,6 +16,7 @@
             INCLUDE "LIB/DMMCODE.X68"
             INCLUDE "LIB/AGLCODE.X68"
             INCLUDE "LIB/UTLCODE.X68"
+            
 START:      
 ;---- INITIALIZATION ---------------------------------------------------------
             ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
@@ -77,6 +78,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
 
 
 
