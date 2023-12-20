@@ -18,11 +18,11 @@ CIRCINIT:
 
 
         MOVE.B  #80,D0
-        MOVE.L  #$00000000,D1
+        MOVE.L  #NEGRO,D1
         TRAP    #15             ;SET PEN COLOR
     
         MOVE.B  #81,D0
-        MOVE.L  #$000000FF,D1
+        MOVE.L  #ROJO,D1
         TRAP    #15             ;SET FILL COLOR
 
         MOVE.W   #RADINIC,(A0)
@@ -39,35 +39,19 @@ DRAWCIRC:
 ;OUTPUT:
 ;------------------------------------------------------------------------------
 
-        CMPI.W  #RADFINA,(A0)       ;NO SE DIBUJA EL CIRCULO
-        BGT     BACK
-;------------------------------------------------------------------------------
+       
 ;COLOR SELECTOR
 
         *CMPI.W  #RADFINA-50,(A0)
         *BLT     JUMP1
         MOVE.B  #81,D0
-        MOVE.L  #(CIRCCOL),D1      CADA LOOP VA OSCURECIENDO EL COLOR (NO FUNCIONA)
+        CLR.L   D1
+        MOVE.B  1(A0),D1
+        ADD.B   #100,D1
         
         TRAP    #15
-        SUBQ.L  #1,(CIRCCOL)
-*        CMPI.W  #RADFINA-80,(A0)
-*        BLT     JUMP1
-*        MOVE.B  #81,D0
-*        MOVE.L  #$000000CC,D1
-*        TRAP    #15
-*        
-*        CMPI.W  #RADFINA-60,(A0)
-*        BLT     JUMP1
-*        MOVE.B  #81,D0
-*        MOVE.L  #$00000099,D1
-*        TRAP    #15
-*        
-*        CMPI.W  #RADFINA-40,(A0)
-*        BLT     JUMP1
-*        MOVE.B  #81,D0
-*        MOVE.L  #$00000055,D1
-*        TRAP    #15
+
+
         
         
 
@@ -92,16 +76,16 @@ JUMP1:
         MOVE.L  #ROJO,D1
         TRAP    #15
         
-JUMP2:
+
         MOVEM.L (A7)+,D0-D6/A1-A2
-        CMPI.W  #RADFINA,(A0)
-        BEQ     SUBLIFE
+        *CMPI.W  #RADFINA,(A0)
+        *BEQ     SUBLIFE
 BACK:            
 
         RTS
 SUBLIFE:
-        SUBQ.W  #1,(SCOLIFE)
-        BRA BACK
+        *SUBQ.W  #1,(SCOLIFE)
+        *BRA BACK
 
 GETCORD:
 
@@ -131,24 +115,24 @@ GETCORD:
 
 CIRCUPD:
         
-               
+        MOVE.W  D0,-(A7)       
         CMPI.W  #RADFINA,(A0)
-        BGT     BACK1 
-        MOVE.W  D0,-(A7)
+        BLT     ALIVE
+        SUBQ.B  #1,(SCOLIFE)
+        JSR     AGLKILL
+        BRA     FIN
+ALIVE: 
+        
         ADDQ.B  #2,(FRAMCONT)
         CMP.B   #5,(FRAMCONT)
         BGT     WINT
         MOVE.W  (CIRCVEL),D0
         ADD.W   D0,(A0)
         CLR.B   (FRAMCONT)
-        *CMP.B   #29,(COUNTER)
-        *BNE     JUMP3
-        *SUB.W  #11,(CIRCCOL)  
-JUMP3:
-        
-        MOVE.W  (A7)+,D0
- 
-BACK1:       
+   
+     
+FIN     MOVE.W  (A7)+,D0
+   
         RTS
 
 
@@ -166,6 +150,7 @@ BACK1:
 *~Font size~9~
 *~Tab type~1~
 *~Tab size~4~
+
 
 
 

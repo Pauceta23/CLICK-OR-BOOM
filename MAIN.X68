@@ -23,7 +23,7 @@ START:
             JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
             JSR     RANINIT       ;
-            MOVE.W  #3,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
+            MOVE.B  #3,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
              
             LEA CIRCINIT,A1
             LEA CIRCUPD,A2
@@ -66,7 +66,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
 ;COMO ESTÁ AHORA EL PROGRAMA ACABA AL LLEGAR LA PELOTA A SU RADIO MÁXIMO,
 ;CAMBIAR ESTO POR QUE EL JUGADOR PIERDA UNA VIDA
 
-            CMPI    #2,(SCOLIFE)
+            CMPI.B    #0,(SCOLIFE)
             BNE     LOOP
 
             SIMHALT             
@@ -78,6 +78,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
 
 
 
