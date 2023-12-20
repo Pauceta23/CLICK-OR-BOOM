@@ -14,7 +14,7 @@ NEGRO   EQU $00000000
 
 ; --- SCORE RELATED CONSTANTS --------------------------------------------------
 
-SCOFCOL     EQU     $00FFFFFF               ; TEXT BACKGROUND COLOR
+SCOFCOL     EQU     $00000000              ; TEXT BACKGROUND COLOR
 SCOLINE1    EQU     $0101                   ; FIRST TEXT LINE COORDINATES
 SCOLINE2    EQU     $0102                   ; SECOND TEXT LINE COORDINATES
 

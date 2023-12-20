@@ -17,7 +17,7 @@ CIRCVEC DS.W    1           ;CIRCLE RANDOM VECTOR
 
 ; --- SCOREBOARD RELATED VARIABLES ---------------------------------------------
 
-SCONUMB DS.W    1           ;NUMBER OF CAPTURED CERCLES
+SCONUMB DS.B    1           ;NUMBER OF CAPTURED CERCLES
 SCOLIFE DS.B    1           ;NUMBER OF LIFES
         DS.W    0
 

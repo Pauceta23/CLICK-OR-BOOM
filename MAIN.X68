@@ -11,7 +11,7 @@
             INCLUDE "SYSCONST.X68"
 
             INCLUDE "CIRCLE.X68"
-            ;INCLUDE "SCORE.X68"
+            INCLUDE "SCORE.X68"
             INCLUDE "SYSTEM.X68"
             INCLUDE "LIB/DMMCODE.X68"
             INCLUDE "LIB/AGLCODE.X68"
@@ -23,6 +23,7 @@ START:
             JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
             JSR     RANINIT       ;
+            JSR     SCOINIT
             MOVE.B  #3,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
              
             LEA CIRCINIT,A1
@@ -51,7 +52,7 @@ SALTO:
 ;UPDATE GAME ELEMENTS
 
             JSR     AGLUPD        ;ACTUALITZAM ELS CERCLES TENINT EN COMPTE 
-                                  ;LA LECTURA DE RATOLÍ                       
+            JSR     SCOPLOT       ;LA LECTURA DE RATOLÍ                       
 ;---- SYNCRONIZATION ---------------------------------------------------------
 
 WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL 
