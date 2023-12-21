@@ -113,28 +113,29 @@ READMOU
 ;
 ;----------------------------------------------------------------------------- 
             MOVEM.W D0-D1, -(A7)
+            MOVEM.W D2-D3, -(A7)
             
             MOVE.W  #61,D0          ;LECTURA DEL RATOLÍ
             MOVE.W  #0,D1
             TRAP    #15
             
             MOVE.B  D0, MOUSCLIC     ;EMMAGATZEMAM SI S'HA CLICAT EL RATOLÍ
-            MOVE.L  D1, D3          ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
-            ANDI.L  #$0000FFFF, D3
-            MOVE.L  D3, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
+            MOVE.L  D1, D2          ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
+            ANDI.L  #$0000FFFF, D2
+            MOVE.L  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
             
-            MOVE.L  D1, D4          ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA Y
-            ANDI.L  #$FFFF0000, D4
-            LSR.L   #8, D4
-            LSR.L   #8, D4
-            MOVE.L  D4, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
+            MOVE.L  D1, D3          ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA Y
+            ANDI.L  #$FFFF0000, D3
+            LSR.L   #8, D3
+            LSR.L   #8, D3
+            MOVE.L  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
             
-            MOVE.L  D1, D5           ;VISUALIZAR TOTES LES COORDENADES
-            
+            MOVEM.W (A7)+, D2-D3            
             MOVEM.W (A7)+, D0-D1
             RTS
             
             
+
 
 
 

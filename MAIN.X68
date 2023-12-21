@@ -95,6 +95,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
 
 
 
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

@@ -112,44 +112,56 @@ GETCORD:
         ADD.W   (A0),D4
         RTS
     
-
+    
 CIRCUPD:
+        MOVEM.L D0-D1,-(A7)
+        MOVEM.L D2-D3,-(A7)
         
-        MOVE.W  D0,-(A7)       
-        CMPI.W  #RADFINA,(A0)
-        BLT     ALIVE
-        SUBQ.B  #1,(SCOLIFE)
+        ;COMPROVAR SI HA EXPLOTAT
+        CMPI.W  #RADFINA,(A0) 
+        BGT     EXPLOTE
+        
+        ;COMPROVAR SI S'HA CLICAT
+        MOVE.W  MOUSCODX,D1
+        SUB.W   #RANDX,D1
+        
+        MOVE.W  MOUSCODY,D2
+        SUB.W   #RANDY,D2
+        
+        MULS    D1,D1
+        MULS    D2,D2
+        
+        ADD.W   D1,D2
+        
+        MULU    D2,D2
+        MOVE.W  (A0),D3
+        MULU    D3,D3
+        
+        CMP.W   D2,D3
+        BGT     ALIVE
         JSR     AGLKILL
-        BRA     FIN
-ALIVE: 
-        
+                    
+ALIVE:        
         ADDQ.B  #2,(FRAMCONT)
         CMP.B   #5,(FRAMCONT)
         BGT     WINT
         MOVE.W  (CIRCVEL),D0
         ADD.W   D0,(A0)
         CLR.B   (FRAMCONT)
+        BRA     FIN
+EXPLOTE:
+        SUBQ.B  #1,(SCOLIFE)
+        JSR     AGLKILL
    
      
-FIN     MOVE.W  (A7)+,D0
+FIN     MOVEM.L (A7)+,D2-D3
+        MOVEM.L (A7)+,D0-D1
    
         RTS
 
+DISTX   DS.L    1
+DISTY   DS.L    1
 
-
-
-
-
-
-
-
-
-
-
-*~Font name~Fixedsys~
-*~Font size~9~
-*~Tab type~1~
-*~Tab size~4~
 
 
 
