@@ -3,8 +3,8 @@
 
 ;==============================================================================
 ;CIRCLE MANAGMENT  (AGENT)
-;CIRCRAD (W)    (A0)
-;CIRCVEC (W)    2(A0)
+;CIRCRAD (W)    (A0)        RADIO DE CADA CIRCULO
+;CIRCVEC (W)    2(A0)       PUNTERO AL VECTOR DE POSICIONES
 
 
 ;==============================================================================
@@ -79,7 +79,8 @@ JUMP1:
 
         MOVEM.L (A7)+,D0-D6/A1-A2
         *CMPI.W  #RADFINA,(A0)
-        *BEQ     SUBLIFE
+        *BEQ     
+        
 BACK:            
 
         RTS
@@ -89,8 +90,8 @@ SUBLIFE:
 
 GETCORD:
 
-        LEA RANDX,A2
-        LEA RANDY,A1
+        LEA LVL3X,A2
+        LEA LVL3Y,A1
         
         ;ADDQ.W   #2,(CIRCVEC)
         MOVE.W  2(A0),D6
@@ -161,6 +162,7 @@ FIN     MOVEM.L (A7)+,D2-D3
 
 DISTX   DS.L    1
 DISTY   DS.L    1
+
 
 
 
