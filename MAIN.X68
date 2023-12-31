@@ -9,6 +9,7 @@
             INCLUDE "CONST.X68"
             INCLUDE "LIB/DMMCONST.X68"
             INCLUDE "SYSCONST.X68"
+
             INCLUDE "CIRCLE.X68"
             INCLUDE "SCORE.X68"
             INCLUDE "SYSTEM.X68"
@@ -21,14 +22,15 @@ START:
             ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
             JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
-            JSR     RANINIT       ;
+            JSR     RANINIT       
             JSR     SCOINIT
-            MOVE.B  #50,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
+            MOVE.B  #3,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
              
             LEA CIRCINIT,A1
             LEA CIRCUPD,A2
             LEA DRAWCIRC,A3
             MOVE.W  #1,D0
+            ADDQ.W  #2,(CIRCVEC)
             JSR     AGLADD
             CLR.B   (COUNTER)
             
@@ -40,8 +42,15 @@ LOOP:
             BNE     SALTO         ;NO BOTA 
             CLR.B   (COUNTER)     ;REINICIA EL COMPTADOR
             ADDQ.W  #2,(CIRCVEC)  ;PUJA LA VELOCITAT DE CREIXEMENT DELS CERCLES
-            JSR     AGLADD        ;AFEGIM NOUS CERCLES
-SALTO:
+            **AFEGIM CERCLES
+            LEA CIRCINIT,A1
+            LEA CIRCUPD,A2
+            LEA DRAWCIRC,A3
+            MOVE.W  #1,D0
+            ADDQ.W  #2,(CIRCVEC)
+            JSR     AGLADD
+            **FI AFEGIM CERCLES
+SALTO:      JSR     MOUSINIT
 
 ;READ INPUT DEVICES
 
@@ -49,8 +58,8 @@ SALTO:
     
 ;UPDATE GAME ELEMENTS
 
-            JSR     AGLUPD        ;ACTUALITZAM ELS CERCLES TENINT EN COMPTE 
-                               
+            JSR     AGLUPD        ;ACTUALITZAM ELS CERCLES
+                                  
 ;---- SYNCRONIZATION ---------------------------------------------------------
 
 WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL 
@@ -59,14 +68,15 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
 
 ;---- DRAWING ----------------------------------------------------------------
             
-            JSR      AGLPLOT      ;DIBUIXA AL BUFFER OCULT
-            JSR     SCOPLOT       ;DIBUIXA MARCADOR   
-            TRAP     #0           ;INTERCANVIA ELS BUFFERS (OCULT<->VISIBLE)
+            JSR     AGLPLOT      ;DIBUIXA AL BUFFER OCULT
+            JSR     SCOPLOT      ;LA LECTURA DE RATOLÍ  
+
+            TRAP    #0           ;INTERCANVIA ELS BUFFERS (OCULT<->VISIBLE)
             
 ;COMO ESTÁ AHORA EL PROGRAMA ACABA AL LLEGAR LA PELOTA A SU RADIO MÁXIMO,
 ;CAMBIAR ESTO POR QUE EL JUGADOR PIERDA UNA VIDA
 
-            CMPI.B    #0,(SCOLIFE)  ;SI QUEDAN VIDAS EL JUEGO SIGUE
+            CMPI.B  #0,(SCOLIFE)
             BNE     LOOP
 
             SIMHALT             
@@ -78,6 +88,9 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
+
+
 
 
 

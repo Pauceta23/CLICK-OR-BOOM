@@ -1,0 +1,107 @@
+000016D6 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 31/12/2023 15:14:36
+
+00000000                             1  ; =============================================================================
+00000000                             2  ; AGENT MANAGEMENT
+00000000                             3  ; EACH AGENT HAS A DATA BLOCK FROM DMM AS FOLLOWS:
+00000000                             4  ; +0 - LONG : UPDATE SUBROUTINE POINTER
+00000000                             5  ; +4 - LONG : PLOT SUBROUTINE POINTER
+00000000                             6  ; +8:END    : DATA (AGENT SPECIFIC)
+00000000                             7  ; =============================================================================
+00000000                             8  
+00000000                             9  ; -----------------------------------------------------------------------------
+00000000                            10  AGLADD
+00000000                            11  ; CREATES A NEW AGENT
+00000000                            12  ; INPUT    - A1 - POINTER TO AGENT INIT FUNCTION
+00000000                            13  ;            A2 - POINTER TO AGENT UPDATE FUNCTION
+00000000                            14  ;            A3 - POINTER TO AGENT PLOT FUNCTION
+00000000                            15  ;            D0 - AGENT TYPE (USED AS OWNED BY DMM)
+00000000                            16  ;            D1 - AGENT INITIALIZATION PARAMETER 1
+00000000                            17  ;            D2 - AGENT INITIALIZATION PARAMETER 2
+00000000                            18  ;            D3 - AGENT INITIALIZATION PARAMETER 3
+00000000                            19  ; OUTPUT   - NONE
+00000000                            20  ; MODIFIES - NONE
+00000000                            21  ; -----------------------------------------------------------------------------
+00000000  2F08                      22              MOVE.L  A0,-(A7)
+Line 23 ERROR: Undefined symbol
+00000002  4EB9 004DBD16             23              JSR     DMMALLOC
+00000008  B1FC 00000000             24              CMP.L   #0,A0
+0000000E  6700 0008                 25              BEQ     .END
+00000012  20CA                      26              MOVE.L  A2,(A0)+
+00000014  20CB                      27              MOVE.L  A3,(A0)+
+00000016  4E91                      28              JSR     (A1)
+00000018  205F                      29  .END        MOVE.L  (A7)+,A0
+0000001A  4E75                      30              RTS
+0000001C                            31  
+0000001C                            32  ; -----------------------------------------------------------------------------
+0000001C                            33  AGLUPD
+0000001C                            34  ; UPDATES THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
+0000001C                            35  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
+0000001C                            36  ; INPUT    - NONE
+0000001C                            37  ; OUTPUT   - NONE
+0000001C                            38  ; MODIFIES - NONE
+0000001C                            39  ; -----------------------------------------------------------------------------
+0000001C  48E7 00C0                 40              MOVEM.L A0-A1,-(A7)
+Line 41 ERROR: Undefined symbol
+00000020  4EB9 004DBD16             41              JSR     DMMFIRST
+00000026  B1FC 00000000             42  .LOOP       CMP.L   #0,A0
+0000002C  6700 0010                 43              BEQ     .END
+00000030  2250                      44              MOVE.L  (A0),A1
+00000032  5088                      45              ADD.L   #8,A0
+00000034  4E91                      46              JSR     (A1)
+Line 47 ERROR: Undefined symbol
+00000036  4EB9 004DBD16             47  .NEXT       JSR     DMMNEXT     ;***ETIQUETA AÑADIDA
+0000003C  60E8                      48              BRA     .LOOP
+0000003E  4CDF 0300                 49  .END        MOVEM.L (A7)+,A0-A1
+00000042  4E75                      50              RTS
+00000044                            51  
+00000044                            52  ; -----------------------------------------------------------------------------
+00000044                            53  AGLPLOT
+00000044                            54  ; PLOTS THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
+00000044                            55  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
+00000044                            56  ; INPUT    - NONE
+00000044                            57  ; OUTPUT   - NONE
+00000044                            58  ; MODIFIES - NONE
+00000044                            59  ; -----------------------------------------------------------------------------
+00000044  48E7 00C0                 60              MOVEM.L A0-A1,-(A7)
+Line 61 ERROR: Undefined symbol
+00000048  4EB9 004DBD16             61              JSR     DMMFIRST
+0000004E  B1FC 00000000             62  .LOOP       CMP.L   #0,A0
+00000054  6700 0012                 63              BEQ     .END
+00000058  2268 0004                 64              MOVE.L  4(A0),A1
+0000005C  5088                      65              ADD.L   #8,A0
+0000005E  4E91                      66              JSR     (A1)
+Line 67 ERROR: Undefined symbol
+00000060  4EB9 004DBD16             67              JSR     DMMNEXT
+00000066  60E6                      68              BRA     .LOOP
+00000068  4CDF 0300                 69  .END        MOVEM.L (A7)+,A0-A1
+0000006C  4E75                      70              RTS
+0000006E                            71  
+0000006E                            72  ; -----------------------------------------------------------------------------
+Line 73 ERROR: Undefined symbol
+0000006E                            73  AGLKILL     EQU     DMMFREE
+0000006E                            74  ; KILLS THE AGENT BY RELEASING ITS MEMORY
+0000006E                            75  ; INPUT    - A0 POINTER WITHIN THE AGENT MEMORY
+0000006E                            76  ; OUTPUT   - NONE
+0000006E                            77  ; MODIFIES - NONE
+0000006E                            78  ; NOTE     - IT IS JUST A WRAPPER FOR DMMFREE
+0000006E                            79  ; -----------------------------------------------------------------------------
+Line 80 WARNING: END directive missing, starting address not set
+
+6 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+AGLADD              0
+AGLADD:END          18
+AGLPLOT             44
+AGLPLOT:END         68
+AGLPLOT:LOOP        4E
+AGLUPD              1C
+AGLUPD:END          3E
+AGLUPD:LOOP         26
+AGLUPD:NEXT         36
