@@ -4,27 +4,21 @@
 ;=====================================================================
 
 SYSINIT:
-            MOVEM.W  D0-D1,-(A7)
-            MOVEM.W  D2-D3,-(A7)
 
             JSR     SCRINIT                   ; SYSTEM INIT
             MOVE.L  #BUFFUPD,($80)            ; INSTALLS A ROUTINE IN TRAP #0
-            MOVE.L  #SNDPLAY,($84)
             MOVE.L  #SCRUPD, ($64)            ; INSTALLS A TIMED ROUTINE
             CLR.B   (FRAMCONT)
+            JSR     MOUSINIT
             MOVE.W   #1,(CIRCVEL)
             MOVE.W  SR,-(A7)
             ANDI.W  #$D8FF,(A7)               ; ENABLE INTS            
-
-            MOVEM.W (A7)+, D2-D3
-            MOVEM.W (A7)+, D0-D1
             
             RTE
 RANINIT:
 
             CLR.W   (CIRCVEC)
             RTS
-
 
 ; -----------------------------------------------------------------------------
 SNDINIT:
@@ -60,7 +54,6 @@ SNDPLAY:
 ; -----------------------------------------------------------------------------
 
         RTE
-
 
 ; -----------------------------------------------------------------------------
 SCRINIT:
@@ -141,7 +134,20 @@ SCRUPD
             ADDQ.B  #1,(SCRINTCT)
             RTE
             
+           
+;-----------------------------------------------------------------------------             
+MOUSINIT
+;INICIALITZA LES VARIABLES DEL RATOLÍ
+; 
+;
+;
+;----------------------------------------------------------------------------- 
+
+            CLR.W   (MOUSCODX)      
+            CLR.W   (MOUSCODY)    
+            CLR.B   (MOUSCLIC)  
             
+            RTS
 ;-----------------------------------------------------------------------------             
 READMOU
 ;READ MOUSE VARIABLES
@@ -149,29 +155,33 @@ READMOU
 ;
 ;
 ;----------------------------------------------------------------------------- 
-            MOVEM.W D0-D1, -(A7)
-            MOVEM.W D2-D3, -(A7)
+            MOVEM.L D0-D1, -(A7)
+            MOVEM.L D2-D3, -(A7)
             
-            MOVE.W  #61,D0          ;LECTURA DEL RATOLÍ
+            MOVE.W  #61,D0           ;LECTURA DEL RATOLÍ
             MOVE.W  #0,D1
             TRAP    #15
             
             MOVE.B  D0, MOUSCLIC     ;EMMAGATZEMAM SI S'HA CLICAT EL RATOLÍ
-            MOVE.L  D1, D2          ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
+            MOVE.L  D1, D2           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
             ANDI.L  #$0000FFFF, D2
-            MOVE.L  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
+            MOVE.W  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
             
-            MOVE.L  D1, D3          ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA Y
+            MOVE.L  D1, D3           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA Y
             ANDI.L  #$FFFF0000, D3
             LSR.L   #8, D3
             LSR.L   #8, D3
-            MOVE.L  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
+            MOVE.W  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
             
-            MOVEM.W (A7)+, D2-D3            
-            MOVEM.W (A7)+, D0-D1
+            MOVEM.L (A7)+, D2-D3            
+            MOVEM.L (A7)+, D0-D1
             RTS
             
             
+
+
+
+
 
 
 

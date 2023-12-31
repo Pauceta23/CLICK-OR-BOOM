@@ -44,7 +44,7 @@ AGLUPD
             MOVE.L  (A0),A1
             ADD.L   #8,A0
             JSR     (A1)
-            JSR     DMMNEXT
+            JSR     DMMNEXT 
             BRA     .LOOP
 .END        MOVEM.L (A7)+,A0-A1
             RTS
@@ -77,3 +77,7 @@ AGLKILL     EQU     DMMFREE
 ; MODIFIES - NONE
 ; NOTE     - IT IS JUST A WRAPPER FOR DMMFREE
 ; -----------------------------------------------------------------------------
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~

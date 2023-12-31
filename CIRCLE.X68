@@ -1,10 +1,7 @@
-
-
-
 ;==============================================================================
 ;CIRCLE MANAGMENT  (AGENT)
-;CIRCRAD (W)    (A0)        RADIO DE CADA CIRCULO
-;CIRCVEC (W)    2(A0)       PUNTERO AL VECTOR DE POSICIONES
+;CIRCRAD (W)    (A0)
+;CIRCVEC (W)    2(A0)
 
 
 ;==============================================================================
@@ -18,11 +15,11 @@ CIRCINIT:
 
 
         MOVE.B  #80,D0
-        MOVE.L  #NEGRO,D1
+        MOVE.L  #BLACK,D1
         TRAP    #15             ;SET PEN COLOR
     
         MOVE.B  #81,D0
-        MOVE.L  #ROJO,D1
+        MOVE.L  #RED,D1
         TRAP    #15             ;SET FILL COLOR
 
         MOVE.W   #RADINIC,(A0)
@@ -32,7 +29,6 @@ CIRCINIT:
         RTS
     
 ;------------------------------------------------------------------------------        
-    
 DRAWCIRC:
 ;CIRCLE PLOT
 ;INPUT: A0 (POINTER VARIABLES)
@@ -42,8 +38,6 @@ DRAWCIRC:
        
 ;COLOR SELECTOR
 
-        *CMPI.W  #RADFINA-50,(A0)
-        *BLT     JUMP1
         MOVE.B  #81,D0
         CLR.L   D1
         MOVE.B  1(A0),D1
@@ -51,49 +45,37 @@ DRAWCIRC:
         
         TRAP    #15
 
-
-        
-        
-
-
 ;BLANCO
         CMPI.W  #RADFINA-1,(A0)
-        BLT     JUMP1
+        BLT     .JUMP1
         MOVE.B  #81,D0
         MOVE.L  #COLFINA,D1
         TRAP    #15
 
 ;------------------------------------------------------------------------------          
         
-JUMP1:  
+.JUMP1:  
         MOVEM.L D0-D6/A1-A2,-(A7)
+        ;DIBUIXAM EL CERCLE       
         MOVE.B  #88,D0
-        JSR     GETCORD
-        TRAP    #15             ;DRAW CIRCLE
+        JSR     GETCORD         
+        TRAP    #15             
         
-        
-        MOVE.B  #81,D0
-        MOVE.L  #ROJO,D1
+        ;RESTABLIM EL COLORETJAT PER DEFECTE
+        MOVE.B  #81,D0          
+        MOVE.L  #RED,D1
         TRAP    #15
         
-
         MOVEM.L (A7)+,D0-D6/A1-A2
-        *CMPI.W  #RADFINA,(A0)
-        *BEQ     
-        
-BACK:            
 
         RTS
-SUBLIFE:
-        *SUBQ.W  #1,(SCOLIFE)
-        *BRA BACK
 
 GETCORD:
-
-        LEA LVL3X,A2
-        LEA LVL3Y,A1
+        MOVE.W  D6,-(A7)
         
-        ;ADDQ.W   #2,(CIRCVEC)
+        LEA     RANDX,A2
+        LEA     RANDY,A1
+        
         MOVE.W  2(A0),D6
 
     ;LEFT X
@@ -111,6 +93,8 @@ GETCORD:
     ;LOWER Y
         MOVE.W  (A1,D6.W),D4
         ADD.W   (A0),D4
+        
+        MOVE.W  (A7)+,D6
         RTS
     
     
@@ -120,27 +104,32 @@ CIRCUPD:
         
         ;COMPROVAR SI HA EXPLOTAT
         CMPI.W  #RADFINA,(A0) 
-        BGT     EXPLOTE
+        BGT     BOOM
         
         ;COMPROVAR SI S'HA CLICAT
-        MOVE.W  MOUSCODX,D1
-        SUB.W   #RANDX,D1
+        TST.B   (MOUSCLIC)
+        BEQ     ALIVE           ;SI HI HA UN 0, NO S'HA CLICAT EL CERCLE SEGUR QUE ES VIU
         
-        MOVE.W  MOUSCODY,D2
-        SUB.W   #RANDY,D2
+        ;COMENÇAM A CALCULAR A VEURE SI S'HA CLICAT DINS DEL CERCLE
+        JSR     GETCORD         ;UTILITZAREM ELS VALORS DE D1 I D2 PER OBTENIR EL CENTRE
+        ADD.W   (A0),D1
+        ADD.W   (A0),D2         ;D1 COORDENADES X I D2 COORDENADES Y DEL CENTRE
         
-        MULS    D1,D1
+        ;COMENÇAM ELS CÀLCULS UTILITZANT LA FÓRMULA DE LA DISTÀNCIA ELEVADA A 2
+        * d = sqrt((x2-x1)^2 + (y2-y1)^2) => d^2 >= (x2-x1)^2 + (y2-y1)^2
+        SUB.W   (MOUSCODX),D1   ;CALCULAM LES DIFERENCIES ENTRE X I Y
+        SUB.W   (MOUSCODY),D2
+        
+        MULS    D1,D1           ;CALCULAM EL QUADRAT DE LES DIFERENCIES
         MULS    D2,D2
         
-        ADD.W   D1,D2
+        ADD.L   D1,D2           ;LES SUMAM
         
-        MULU    D2,D2
-        MOVE.W  (A0),D3
+        MOVE.W  (A0),D3         ;OBTENIM EL RADI I CALCULAM EL SEU QUADRAT
         MULU    D3,D3
         
-        CMP.W   D2,D3
-        BGT     ALIVE
-        JSR     AGLKILL
+        CMP.L   D3,D2           ;SI LA DISTANCIA ES MENOR AL RADI
+        BLT     KILL            ;S'HA FET CLICK ENDINS, ES MATA EL CERCLE
                     
 ALIVE:        
         ADDQ.B  #2,(FRAMCONT)
@@ -150,9 +139,13 @@ ALIVE:
         ADD.W   D0,(A0)
         CLR.B   (FRAMCONT)
         BRA     FIN
-EXPLOTE:
-        SUBQ.B  #1,(SCOLIFE)
+        
+BOOM    SUBQ.B  #1,(SCOLIFE)    ;RESTA UNA VIDA
         JSR     AGLKILL
+        BRA     FIN
+        
+KILL    ADDQ.B  #1,SCONUMB
+        JSR     AGLKILL         ;MATA L'AGENT
    
      
 FIN     MOVEM.L (A7)+,D2-D3
@@ -160,8 +153,8 @@ FIN     MOVEM.L (A7)+,D2-D3
    
         RTS
 
-DISTX   DS.L    1
-DISTY   DS.L    1
+
+
 
 
 
