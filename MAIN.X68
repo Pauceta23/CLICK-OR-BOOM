@@ -17,6 +17,14 @@
             INCLUDE "LIB/AGLCODE.X68"
             INCLUDE "LIB/UTLCODE.X68"
             
+addAgent   MACRO
+            LEA CIRCINIT,A1
+            LEA CIRCUPD,A2
+            LEA DRAWCIRC,A3
+            MOVE.W  #1,D0
+            JSR     AGLADD
+            ENDM
+            
 START:      
 ;---- INITIALIZATION ---------------------------------------------------------
             ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
@@ -24,14 +32,11 @@ START:
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
             JSR     RANINIT       
             JSR     SCOINIT
-            MOVE.B  #3,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
-             
-            LEA CIRCINIT,A1
-            LEA CIRCUPD,A2
-            LEA DRAWCIRC,A3
-            MOVE.W  #1,D0
+            
+            ;AFEGIM EL PRIMER CERCLE
+            addAgent             
+            
             ADDQ.W  #2,(CIRCVEC)
-            JSR     AGLADD
             CLR.B   (COUNTER)
             
 LOOP:      
@@ -42,15 +47,11 @@ LOOP:
             BNE     SALTO         ;NO BOTA 
             CLR.B   (COUNTER)     ;REINICIA EL COMPTADOR
             ADDQ.W  #2,(CIRCVEC)  ;PUJA LA VELOCITAT DE CREIXEMENT DELS CERCLES
-            **AFEGIM CERCLES
-            LEA CIRCINIT,A1
-            LEA CIRCUPD,A2
-            LEA DRAWCIRC,A3
-            MOVE.W  #1,D0
-            ADDQ.W  #2,(CIRCVEC)
-            JSR     AGLADD
-            **FI AFEGIM CERCLES
-SALTO:      JSR     MOUSINIT
+            
+            ;AFEGIM UN CERCLE MÉS
+            addAgent            
+            
+SALTO       JSR     MOUSINIT    ;A CADA ITERACIÓ REINICIAM L'ESTAT DEL RATOLÍ
 
 ;READ INPUT DEVICES
 
@@ -68,16 +69,15 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
 
 ;---- DRAWING ----------------------------------------------------------------
             
-            JSR     AGLPLOT      ;DIBUIXA AL BUFFER OCULT
-            JSR     SCOPLOT      ;LA LECTURA DE RATOLÍ  
+            JSR     AGLPLOT      ;DIBUIXA ELS AGENTS (CERCLES)
+            JSR     SCOPLOT      ;DIBUIXA EL MARCADOR
 
             TRAP    #0           ;INTERCANVIA ELS BUFFERS (OCULT<->VISIBLE)
-            
-;COMO ESTÁ AHORA EL PROGRAMA ACABA AL LLEGAR LA PELOTA A SU RADIO MÁXIMO,
-;CAMBIAR ESTO POR QUE EL JUGADOR PIERDA UNA VIDA
 
-            CMPI.B  #0,(SCOLIFE)
-            BNE     LOOP
+;---- CHECK IF GAME OVER -----------------------------------------------------
+
+            CMPI.B  #0,(SCOLIFE)    ;SI LES VIDES NO HAN ARRIBAT A 0
+            BNE     LOOP            ;TORNAM CAP AMUNT I CONTINUA EL JOC
 
             SIMHALT             
             
@@ -88,6 +88,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
 
 
 

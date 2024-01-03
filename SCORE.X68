@@ -10,7 +10,7 @@ SCOINIT
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             CLR.B   (SCONUMB)
-            CLR.B   (SCOLIFE)
+            MOVE.B  #3,(SCOLIFE)  ;INICIALITACIÓ DE LES VIDES
             RTS
             
 ; ------------------------------------------------------------------------------
@@ -31,7 +31,6 @@ SCOPLOT
             ; SET FIRST LINE POSITION
             MOVE.B  #11,D0
             MOVE.W  #SCOLINE1,D1
-            
             TRAP    #15
 
             ; PRINT FIRST LINE
@@ -56,9 +55,11 @@ SCOPLOT
             MOVEM.L (A7)+,D0-D1/A1
             
             RTS
+            
 .LIFESCOU   DC.B    'LIFES :',0
 .CIRCLCOU   DC.B    'CIRCLES HIT:',0
             DS.W    0
+
 
 
 
