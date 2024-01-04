@@ -15,10 +15,6 @@ SYSINIT:
             ANDI.W  #$D8FF,(A7)               ; ENABLE INTS            
             
             RTE
-RANINIT:
-
-            CLR.W   (CIRCVEC)
-            RTS
 
 ; -----------------------------------------------------------------------------
 SNDINIT:
@@ -81,7 +77,7 @@ SCRINIT:
             MOVE.B  #11,D0
             TRAP    #15
             
-            MOVE.B  #32,D0                    ;CREACI” DE TIMED INT
+            MOVE.B  #32,D0                    ;CREACI√ì DE TIMED INT
             MOVE.B  #6,D1
             MOVE.B  #$81,D2                   ;8(HABILITAR INT) 1(QUINA INT)
             MOVE.L  #1000/FRAMRATE,D3         ;FER AQUESTA INT CADA X ms
@@ -137,7 +133,7 @@ SCRUPD
            
 ;-----------------------------------------------------------------------------             
 MOUSINIT
-;INICIALITZA LES VARIABLES DEL RATOLÕ
+;INICIALITZA LES VARIABLES DEL RATOL√ç
 ; 
 ;
 ;
@@ -158,16 +154,16 @@ READMOU
             MOVEM.L D0-D1, -(A7)
             MOVEM.L D2-D3, -(A7)
             
-            MOVE.W  #61,D0           ;LECTURA DEL RATOLÕ
+            MOVE.W  #61,D0           ;LECTURA DEL RATOL√ç
             MOVE.W  #0,D1
             TRAP    #15
             
-            MOVE.B  D0, MOUSCLIC     ;EMMAGATZEMAM SI S'HA CLICAT EL RATOLÕ
-            MOVE.L  D1, D2           ;PROC…S D'EXTRACCI” DE LA COORDENADA X
+            MOVE.B  D0, MOUSCLIC     ;EMMAGATZEMAM SI S'HA CLICAT EL RATOL√ç
+            MOVE.L  D1, D2           ;PROC√âS D'EXTRACCI√ì DE LA COORDENADA X
             ANDI.L  #$0000FFFF, D2
             MOVE.W  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
             
-            MOVE.L  D1, D3           ;PROC…S D'EXTRACCI” DE LA COORDENADA Y
+            MOVE.L  D1, D3           ;PROC√âS D'EXTRACCI√ì DE LA COORDENADA Y
             ANDI.L  #$FFFF0000, D3
             LSR.L   #8, D3
             LSR.L   #8, D3
