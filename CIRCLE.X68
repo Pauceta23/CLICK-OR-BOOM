@@ -73,8 +73,8 @@ DRAWCIRC:
 GETCORD:
         MOVE.W  D6,-(A7)
         
-        LEA     RANDX,A2
-        LEA     RANDY,A1
+        LEA     LVL1X,A2
+        LEA     LVL1Y,A1
         
         MOVE.W  2(A0),D6
 
@@ -152,6 +152,7 @@ FIN     MOVEM.L (A7)+,D2-D3
         MOVEM.L (A7)+,D0-D1
    
         RTS
+
 
 
 

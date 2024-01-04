@@ -30,24 +30,34 @@ START:
             ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
             JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
-            JSR     RANINIT       
             JSR     SCOINIT
             
             ;AFEGIM EL PRIMER CERCLE
             addAgent             
             
-            ADDQ.W  #2,(CIRCVEC)
+            ;ADDQ.W  #2,(CIRCVEC)
             CLR.B   (COUNTER)
             
 LOOP:      
 ;---- UPDATE -----------------------------------------------------------------
 
             ADDQ.B  #1,(COUNTER)  ;AFEGIM 1 AL CONTADOR DE CERCLES
-            CMP.B   #30,(COUNTER) ;SI HA ARRIBAT A 30
+            MOVE.B  (CIRCPAC),D0
+            CMP.B   (COUNTER),D0 ;SI HA ARRIBAT A 30
             BNE     SALTO         ;NO BOTA 
             CLR.B   (COUNTER)     ;REINICIA EL COMPTADOR
-            ADDQ.W  #2,(CIRCVEC)  ;PUJA LA VELOCITAT DE CREIXEMENT DELS CERCLES
-            
+            ADDQ.W  #2,(CIRCVEC)  ;AUMENTA L'INDEX DEL NIVELL DELS CERCLES
+            CMP.W   #100,(CIRCVEC)
+            BNE   VEL2
+             
+            ADDQ.W  #1,(CIRCVEL)
+            SUB.B  #10,(CIRCPAC) 
+VEL2
+            CMP.W   #200,(CIRCVEC)
+            BNE     VEL3
+            ADDQ.W  #1,(CIRCVEL)
+            SUBQ.B  #5,(CIRCPAC) 
+VEL3            
             ;AFEGIM UN CERCLE MÉS
             addAgent            
             
@@ -88,6 +98,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
 
 
 
