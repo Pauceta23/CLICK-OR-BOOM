@@ -41,8 +41,15 @@ DRAWCIRC:
         MOVE.B  #81,D0
         CLR.L   D1
         MOVE.B  1(A0),D1
-        ADD.B   #100,D1
-        
+        ADD.L   #100,D1
+        CMP.B   #1,(LVLNUM)
+        BNE     .NOCOL
+        SWAP    D1
+        BRA     .FINCOL
+.NOCOL   CMP.B   #2,(LVLNUM)
+        BNE     .FINCOL
+        LSL.L   #8,D1
+.FINCOL        
         TRAP    #15
 
 ;BLANCO
@@ -62,8 +69,19 @@ DRAWCIRC:
         TRAP    #15             
         
         ;RESTABLIM EL COLORETJAT PER DEFECTE
-        MOVE.B  #81,D0          
+        CMP.B   #1,(LVLNUM)
+        BNE     .2COL
+        MOVE.L  #BLUE,D1
+        BRA     FINCOL
+.2COL    
+        CMP.B   #2,(LVLNUM)
+        BNE     .3COL
+        MOVE.L  #GREEN,D1
+        BRA     FINCOL
+.3COL      
         MOVE.L  #RED,D1
+FINCOL        
+        MOVE.B  #81,D0
         TRAP    #15
         
         MOVEM.L (A7)+,D0-D6/A1-A2
@@ -73,8 +91,19 @@ DRAWCIRC:
 GETCORD:
         MOVE.W  D6,-(A7)
         
+        CMP.B   #1,(LVLNUM)
+        BNE     .2LVL
         LEA     LVL1X,A2
         LEA     LVL1Y,A1
+        BRA     .FINLVL
+.2LVL   CMP.B   #2,(LVLNUM)
+        BNE     .3LVL
+        LEA     LVL2X,A2
+        LEA     LVL2Y,A1
+        BRA     .FINLVL
+.3LVL   LEA     LVL3X,A2
+        LEA     LVL3Y,A1
+.FINLVL
         
         MOVE.W  2(A0),D6
 
@@ -160,6 +189,7 @@ FIN     MOVEM.L (A7)+,D2-D3
         MOVEM.L (A7)+,D0-D1
    
         RTS
+
 
 
 

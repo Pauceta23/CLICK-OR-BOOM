@@ -27,18 +27,18 @@ SNDINIT:
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-        MOVEM.L D0-D1/A1-A2,-(A7)
-        CLR.B   D1
-        LEA     .SNDLIST,A2
-.LOOP   MOVE.L  (A2)+,D0
-        BEQ     .DONE
-        MOVE.L  D0,A1
-        MOVE.B  #71,D0
-        TRAP    #15
-        ADDQ.B  #1,D1
-        BRA     .LOOP
-.DONE   MOVEM.L (A7)+,D0-D1/A1-A2
-        RTS
+            MOVEM.L D0-D1/A1-A2,-(A7)
+            CLR.B   D1
+            LEA     .SNDLIST,A2
+.LOOP       MOVE.L  (A2)+,D0
+            BEQ     .DONE
+            MOVE.L  D0,A1
+            MOVE.B  #71,D0
+            TRAP    #15
+            ADDQ.B  #1,D1
+            BRA     .LOOP
+.DONE       MOVEM.L (A7)+,D0-D1/A1-A2
+            RTS
 .SNDCLK     DC.B    'SND/HIT.wav',0
 .SNDMISS    DC.B    'SND/MISS.wav',0
 .SNDLIST    DC.L    .SNDCLK,.SNDMISS,0
@@ -202,6 +202,7 @@ NOCLICAT:
 
             
             
+
 
 
 

@@ -23,7 +23,10 @@ SCONUMB DS.B    1           ;NUMBER OF CAPTURED CERCLES
 SCOLIFE DS.B    1           ;NUMBER OF LIFES
         DS.W    0
 
+; --- LEVEL RELATED VARIABLES ---------------------------------------------
 
+LVLNUM  DC.B    3           ;LEVEL CHOOSE
+        DS.W    0
 
 
 

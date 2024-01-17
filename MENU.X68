@@ -101,6 +101,7 @@ CHANRED:
             TRAP    #15
             RTS
 
+;Falta ratón y mover nivel elegido a LVLNUM
 
 
     SIMHALT             ; halt simulator
