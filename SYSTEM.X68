@@ -50,13 +50,13 @@ SNDPLAY1:
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-        MOVEM.L D0-D1,-(A7)
-        MOVE.B  #72,D0
-        CLR.B   D1
-        TRAP    #15
-        MOVEM.L (A7)+,D0-D1
+            MOVEM.L D0-D1,-(A7)
+            MOVE.B  #72,D0
+            CLR.B   D1
+            TRAP    #15
+            MOVEM.L (A7)+,D0-D1
 
-        RTS
+            RTS
         
 ; -----------------------------------------------------------------------------
 SNDPLAY2:
@@ -65,13 +65,14 @@ SNDPLAY2:
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-        MOVEM.L D0-D1,-(A7)
-        MOVE.B  #72,D0
-        MOVE.B  #1,D1
-        TRAP    #15
-        MOVEM.L (A7)+,D0-D1
 
-        RTS
+            MOVEM.L D0-D1,-(A7)
+            MOVE.B  #72,D0
+            MOVE.B  #1,D1
+            TRAP    #15
+            MOVEM.L (A7)+,D0-D1
+
+            RTS
 
 ; -----------------------------------------------------------------------------
 SCRINIT:
@@ -107,17 +108,6 @@ SCRINIT:
     
             CLR.B   (SCRINTCT)                                             
             
-*           MOVE.L  #SCRISR,($60+SCRIRQ*4)    ; SET EXCEPTION VECTOR
-*           MOVE.B  #5,D1                     ; ENABLE EXCEPTION PROCESSING
-*           MOVE.B  #32,D0
-*           TRAP    #15
-*           MOVE.B  #%10000000|SCRIRQ,D2      ; ENABLE AUTO-IRQ
-*           MOVE.B  #SCRTIM,D3
-*           MOVE.B  #6,D1
-*           MOVE.B  #32,D0
-*           TRAP    #15
-*           CLR.B   (SCRINTCT)                ; PREPARE INTERRUPT FLAG
-*           CLR.B   (SCRCYCCT)                ; PREPARE CYCLE COUNTER
  
             RTS
 
@@ -146,8 +136,6 @@ BUFFUPD:
 SCRUPD
 ; TIMED INTERRUPT
 ;
-;
-;
 ;-----------------------------------------------------------------------------
             ADDQ.B  #1,(SCRINTCT)
             RTE
@@ -156,8 +144,6 @@ SCRUPD
 ;-----------------------------------------------------------------------------             
 MOUSINIT
 ;INICIALITZA LES VARIABLES DEL RATOLÍ
-; 
-;
 ;
 ;----------------------------------------------------------------------------- 
 
@@ -169,8 +155,6 @@ MOUSINIT
 ;-----------------------------------------------------------------------------             
 READMOU
 ;READ MOUSE VARIABLES
-;            
-;
 ;
 ;----------------------------------------------------------------------------- 
             MOVEM.L D0-D1, -(A7)
