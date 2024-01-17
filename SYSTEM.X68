@@ -179,10 +179,13 @@ READMOU
             MOVEM.L D2-D3, -(A7)
             
             MOVE.W  #61,D0           ;LECTURA DEL RATOLÍ
-            MOVE.B  #0,D1
+            MOVE.W  #2,D1
             TRAP    #15
             
-            MOVE.B  D0, MOUSCLIC     ;EMMAGATZEMAM SI S'HA CLICAT EL RATOLÍ
+            BTST    #0,D0
+            BEQ     NOCLICAT
+            MOVE.B  #1,MOUSCLIC
+      
             MOVE.L  D1, D2           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
             ANDI.L  #$0000FFFF, D2
             MOVE.W  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
@@ -192,12 +195,14 @@ READMOU
             LSR.L   #8, D3
             LSR.L   #8, D3
             MOVE.W  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
-            
+NOCLICAT:             
             MOVEM.L (A7)+, D2-D3            
             MOVEM.L (A7)+, D0-D1
             RTS
+
             
             
+
 
 
 

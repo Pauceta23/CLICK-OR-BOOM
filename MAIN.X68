@@ -9,7 +9,7 @@
             INCLUDE "CONST.X68"
             INCLUDE "LIB/DMMCONST.X68"
             INCLUDE "SYSCONST.X68"
-
+            ;INCLUDE "MENU.X68"
             INCLUDE "CIRCLE.X68"
             INCLUDE "SCORE.X68"
             INCLUDE "SYSTEM.X68"
@@ -29,6 +29,8 @@ START:
 ;---- INITIALIZATION ---------------------------------------------------------
             ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
             JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
+            ;JSR     MENUINIT
+;.MENU       BRA     .MENU
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
             JSR     SCOINIT
             JSR     SNDINIT
@@ -42,26 +44,32 @@ START:
 LOOP:      
 ;---- UPDATE -----------------------------------------------------------------
 
+            MOVE.L  D0,-(A7)
             ADDQ.B  #1,(COUNTER)  ;AFEGIM 1 AL CONTADOR DE CERCLES
             MOVE.B  (CIRCPAC),D0
             CMP.B   (COUNTER),D0 ;SI HA ARRIBAT A 30
             BNE     SALTO         ;NO BOTA 
             CLR.B   (COUNTER)     ;REINICIA EL COMPTADOR
+            
+            CMP.W   #250,(CIRCVEC)
+            BNE     SIGUE
+            JSR     RANINIT     ;CUANDO ACABA EL VECTOR SE REINICIA
+SIGUE
             ADDQ.W  #2,(CIRCVEC)  ;AUMENTA L'INDEX DEL NIVELL DELS CERCLES
             CMP.W   #100,(CIRCVEC)
             BNE   VEL2
              
             ADDQ.W  #1,(CIRCVEL)
-            SUB.B  #10,(CIRCPAC) 
+            SUB.B  #3,(CIRCPAC) 
 VEL2
             CMP.W   #200,(CIRCVEC)
             BNE     VEL3
             ADDQ.W  #1,(CIRCVEL)
-            SUBQ.B  #5,(CIRCPAC) 
+            SUBQ.B  #3,(CIRCPAC) 
 VEL3            
             ;AFEGIM UN CERCLE MÉS
             addAgent            
-            
+            MOVE.L  (A7)+,D0
 SALTO       JSR     MOUSINIT    ;A CADA ITERACIÓ REINICIAM L'ESTAT DEL RATOLÍ
 
 ;READ INPUT DEVICES
@@ -99,6 +107,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
 
 
 
