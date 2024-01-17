@@ -1,7 +1,7 @@
 *-----------------------------------------------------------
 * Title      : PRACTICA FINAL 23-24
 * Written by : Pau Belmonte Clemente & Enrique Grau Artigao
-* Date       : 13/12/2023
+* Date       : 17/01/2024
 * Description: Click the balls before they explode!
 *-----------------------------------------------------------
             ORG     $1000
@@ -27,14 +27,15 @@ addAgent    MACRO
             
 START:      
 ;---- INITIALIZATION ---------------------------------------------------------
-            ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
-            JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
+            ORI     #$0700,SR     ;DESACTIVACIÓN DE INTS
+            JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA Y PASO A MODO USUARIO
 MENU        
-            CLR.B   (LVLNUM)
+            CLR.B   (LVLNUM)      ;PONEMOS A 0 EL NIVEL ESCOGIDO
+            MOVE.B  #0,MOUSMODE   ;SELECCIONAMOS EL MODO DEL RATÓN QUE QUEREMOS
             JSR     MENUINIT
 .LVL                              ;BUCLE DEL MENU
             JSR     MOUSINIT
-            JSR     READMOU2 
+            JSR     READMOU
             JSR     LVLCLIC 
             
             CMP.B   #0,LVLNUM     ;MIENTRAS NO SE ELIJA UN MENU BUCLE       
@@ -45,11 +46,11 @@ MENU
             MOVE.B  #30, CIRCPAC
             CLR.B   FRAMCONT
             MOVE.W  #1, CIRCVEL
-            JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
+            JSR     DMMINIT       ;INICIALIZACIÓN DELS AGENTS (CERCLES)
             JSR     SCOINIT
             JSR     SNDINIT
             
-            ;AFEGIM EL PRIMER CERCLE
+            ;AÑADIMOS EL PRIMER CIRCULO
             addAgent             
             
             CLR.B   (COUNTER)
@@ -58,61 +59,61 @@ LOOP:
 ;---- UPDATE -----------------------------------------------------------------
 
             MOVE.L  D0,-(A7)
-            ADDQ.B  #1,(COUNTER)  ;AFEGIM 1 AL CONTADOR DE CERCLES
+            ADDQ.B  #1,(COUNTER)  ;AÑADIMOS 1 AL CONTADOR DE AGENTES
             MOVE.B  (CIRCPAC),D0
-            CMP.B   (COUNTER),D0 ;SI HA ARRIBAT A 30
-            BNE     SALTO         ;NO BOTA 
-            CLR.B   (COUNTER)     ;REINICIA EL COMPTADOR
+            CMP.B   (COUNTER),D0  ;SI HA LLEGADO A 30
+            BNE     SALTO         ;NO SALTA 
+            CLR.B   (COUNTER)     ;REINICIA EL CONTADOR
             
             CMP.W   #250,(CIRCVEC)
             BNE     SIGUE
-            JSR     RANINIT     ;CUANDO ACABA EL VECTOR SE REINICIA
+            JSR     RANINIT       ;CUANDO ACABA EL VECTOR SE REINICIA
 SIGUE
-            ADDQ.W  #2,(CIRCVEC)  ;AUMENTA L'INDEX DEL NIVELL DELS CERCLES
+            ADDQ.W  #2,(CIRCVEC)  ;AUMENTA EL ÍNDICE DEL NIVEL DE LOS CIRCULOS
             CMP.W   #100,(CIRCVEC)
             BNE   VEL2
              
-            ADDQ.W  #1,(CIRCVEL)
-            SUB.B  #3,(CIRCPAC) 
+            ADDQ.W  #1,(CIRCVEL)  ;AUMENTA LA VELOCIDAD DE CRECIMIENTO
+            SUB.B  #3,(CIRCPAC)   ;AUMENTA LA VELOCIDAD A LA QUE APARECEN
 VEL2
             CMP.W   #200,(CIRCVEC)
             BNE     VEL3
-            ADDQ.W  #1,(CIRCVEL)
-            SUBQ.B  #3,(CIRCPAC) 
+            ADDQ.W  #1,(CIRCVEL)  ;AUMENTA LA VELOCIDAD DE CRECIMIENTO
+            SUBQ.B  #3,(CIRCPAC)  ;AUMENTA LA VELOCIDAD A LA QUE APARECEN
 VEL3            
-            ;AFEGIM UN CERCLE MÉS
+            ;AÑADIMOS UN CIRCULO MÁS
             addAgent            
             MOVE.L  (A7)+,D0
-SALTO       JSR     MOUSINIT    ;A CADA ITERACIÓ REINICIAM L'ESTAT DEL RATOLÍ
+SALTO       JSR     MOUSINIT     ;A CADA ITERACIÓN REINICIAMOS EL ESTADO DEL RATÓN
 
 ;READ INPUT DEVICES
 
-            JSR     READMOU       ;LECTURA DE RATOLÍ
+            JSR     READMOU       ;LECTURA DE RATÓN
     
 ;UPDATE GAME ELEMENTS
 
-            JSR     AGLUPD        ;ACTUALITZAM ELS CERCLES
+            JSR     AGLUPD        ;ACTUALITZAMOS LOS CIRCULOS
                                   
 ;---- SYNCRONIZATION ---------------------------------------------------------
 
-WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL 
-            BEQ     WINT          ;DE SINCRONISME I PUGUI CONTINUAR
+WINT        TST.B   (SCRINTCT)    ;BUCLE DONDE ESPERA HASTA QUE LLEGUE LA SEÑAL 
+            BEQ     WINT          ;DE LA SINCRONIZACIÓN
             CLR.B   (SCRINTCT)
 
 ;---- DRAWING ----------------------------------------------------------------
             
-            JSR     AGLPLOT      ;DIBUIXA ELS AGENTS (CERCLES)
-            JSR     SCOPLOT      ;DIBUIXA EL MARCADOR
+            JSR     AGLPLOT      ;DIBUJA LOS AGENTES (CIRCULOS)
+            JSR     SCOPLOT      ;DIBUJA EL MARCADOR
 
-            TRAP    #0           ;INTERCANVIA ELS BUFFERS (OCULT<->VISIBLE)
+            TRAP    #0           ;INTERCAMBIA LOS BUFFERS (OCULT<->VISIBLE)
 
 ;---- CHECK IF GAME OVER -----------------------------------------------------
 
-            CMPI.B  #0,(SCOLIFE)    ;SI LES VIDES NO HAN ARRIBAT A 0
-            BNE     LOOP            ;TORNAM CAP AMUNT I CONTINUA EL JOC
-            BRA     MENU
+            CMPI.B  #0,(SCOLIFE)    ;SI LAS VIDAS NO HAN LLEGADO A 0
+            BNE     LOOP            ;SUBE Y CONTINUA EL JUEGO
+            BRA     MENU            ;SI NO, VOLVEMOS AL MENÚ INICIAL
 
-            SIMHALT             
+FFIN:       SIMHALT             
             
             INCLUDE "VARS.X68"
             INCLUDE "SYSVARS.X68"
@@ -121,6 +122,9 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
+
+
 
 
 
