@@ -8,7 +8,7 @@
 
 ;------------------------------------------------------------------------------
 CIRCINIT:
-;CIRLCE INITIALIZATION
+;CIRLCE INITIALIZACION
 ;INPUT: A0 (POINTER VARIABLES)
 ;OUTPUT:
 ;------------------------------------------------------------------------------
@@ -16,11 +16,11 @@ CIRCINIT:
 
         MOVE.B  #80,D0
         MOVE.L  #BLACK,D1
-        TRAP    #15             ;SET PEN COLOR
+        TRAP    #15             ;COLOR DE BORDE
     
         MOVE.B  #81,D0
         MOVE.L  #RED,D1
-        TRAP    #15             ;SET FILL COLOR
+        TRAP    #15             ;COLOR DE FONDO
 
         MOVE.W   #RADINIC,(A0)
         MOVE.W  (CIRCVEC),2(A0)
@@ -36,7 +36,7 @@ DRAWCIRC:
 ;------------------------------------------------------------------------------
 
        
-;COLOR SELECTOR
+;SELECTOR DE COLOR
 
         MOVE.B  #81,D0
         CLR.L   D1
@@ -46,7 +46,7 @@ DRAWCIRC:
         BNE     .NOCOL
         SWAP    D1
         BRA     .FINCOL
-.NOCOL   CMP.B   #2,(LVLNUM)
+.NOCOL  CMP.B   #2,(LVLNUM)
         BNE     .FINCOL
         LSL.L   #8,D1
 .FINCOL        
@@ -63,12 +63,12 @@ DRAWCIRC:
         
 .JUMP1:  
         MOVEM.L D0-D6/A1-A2,-(A7)
-        ;DIBUIXAM EL CERCLE       
+        ;DIBUJAMOS EL CIRCULO       
         MOVE.B  #88,D0
         JSR     GETCORD         
         TRAP    #15             
         
-        ;RESTABLIM EL COLORETJAT PER DEFECTE
+        ;RESTABLECEMOS EL COLOREADO POR DEFECTO
         CMP.B   #1,(LVLNUM)
         BNE     .2COL
         MOVE.L  #BLUE,D1
@@ -91,7 +91,7 @@ FINCOL
 GETCORD:
         MOVE.W  D6,-(A7)
         
-        CMP.B   #1,(LVLNUM)
+        CMP.B   #1,(LVLNUM)     ;MIRAMOS EN QUE NIVEL ESTA EL JUEGO     
         BNE     .2LVL
         LEA     LVL1X,A2
         LEA     LVL1Y,A1
@@ -108,8 +108,8 @@ GETCORD:
         MOVE.W  2(A0),D6
 
     ;LEFT X
-        MOVE.W  (A2,D6.W),D1
-        SUB.W   (A0),D1
+        MOVE.W  (A2,D6.W),D1    ;RECORREMOS EL VECTOR ALEATORIO
+        SUB.W   (A0),D1         ;SUMAMOS O RESTAMOS RADIO
     
     ;UPPER Y
         MOVE.W  (A1,D6.W),D2
@@ -131,34 +131,34 @@ CIRCUPD:
         MOVEM.L D0-D1,-(A7)
         MOVEM.L D2-D3,-(A7)
         
-        ;COMPROVAR SI HA EXPLOTAT
+        ;COMPROBAR SI HA EXPLOTADO
         CMPI.W  #RADFINA,(A0) 
         BGT     BOOM
         
-        ;COMPROVAR SI S'HA CLICAT
+        ;COMPROBAR SI SE HA CLICADO
         TST.B   (MOUSCLIC)
-        BEQ     ALIVE           ;SI HI HA UN 0, NO S'HA CLICAT EL CERCLE SEGUR QUE ES VIU
+        BEQ     ALIVE           ;SI HAY UN 0, NO SE HA CLICADO EL CIRCULO SEGURO QUE ESTA VIVO
         
-        ;COMENÇAM A CALCULAR A VEURE SI S'HA CLICAT DINS DEL CERCLE
-        JSR     GETCORD         ;UTILITZAREM ELS VALORS DE D1 I D2 PER OBTENIR EL CENTRE
+        ;COMENZAMOS A CALCULAR A VER SI SE HA CLICADO DENTRO DEL CIRCULO
+        JSR     GETCORD         ;UTILITZAREMOS LOS VALORES DE D1 Y D2 PARA OBTENER EL CENTRO
         ADD.W   (A0),D1
-        ADD.W   (A0),D2         ;D1 COORDENADES X I D2 COORDENADES Y DEL CENTRE
+        ADD.W   (A0),D2         ;D1 COORDENADAS X I D2 COORDENADAS Y DEL CENTRO
         
-        ;COMENÇAM ELS CÀLCULS UTILITZANT LA FÓRMULA DE LA DISTÀNCIA ELEVADA A 2
+        ;COMENZAMOS LOS CÁLCULOS UTILIZANDO LA FÓRMULA DE LA DISTÁNCIA ELEVADA A 2
         * d = sqrt((x2-x1)^2 + (y2-y1)^2) => d^2 >= (x2-x1)^2 + (y2-y1)^2
-        SUB.W   (MOUSCODX),D1   ;CALCULAM LES DIFERENCIES ENTRE X I Y
+        SUB.W   (MOUSCODX),D1   ;CALCULAMOS LAS DIFERENCIAS ENTRE X E Y
         SUB.W   (MOUSCODY),D2
         
-        MULS    D1,D1           ;CALCULAM EL QUADRAT DE LES DIFERENCIES
+        MULS    D1,D1           ;CALCULAMOS EL CUADRADO DE LAS DIFERENCIAS
         MULS    D2,D2
         
-        ADD.L   D1,D2           ;LES SUMAM
+        ADD.L   D1,D2           ;LAS SUMAMOS
         
-        MOVE.W  (A0),D3         ;OBTENIM EL RADI I CALCULAM EL SEU QUADRAT
+        MOVE.W  (A0),D3         ;OBTENEMOS EL RADIO Y CALCULAMOS SU CUADRADO
         MULU    D3,D3
         
-        CMP.L   D3,D2           ;SI LA DISTANCIA ES MENOR AL RADI
-        BLT     KILL            ;S'HA FET CLICK ENDINS, ES MATA EL CERCLE
+        CMP.L   D3,D2           ;SI LA DISTANCIA ES MENOR AL RADIO
+        BLT     KILL            ;SE HA HECHO CLIC DENTRO, SE MATA EL CIRCULO
                     
 ALIVE:        
         ADDQ.B  #2,(FRAMCONT)
@@ -174,14 +174,14 @@ BOOM    SUBQ.B  #1,(SCOLIFE)    ;RESTA UNA VIDA
         JSR     SNDPLAY2
         BRA     FIN
         
-        MOVE.B  #72,D0          ;REPRODUCIR SONIDO (NO FUNCIONA)
+        MOVE.B  #72,D0          ;REPRODUCIR SONIDO
         MOVE.B  #1,D1
         TRAP    #15
         
 KILL    ADDQ.B  #1,SCONUMB
-        JSR     AGLKILL         ;MATA L'AGENT
+        JSR     AGLKILL         ;MATA EL AGENT
 
-        JSR     SNDPLAY1          ;REPRODUCIR SONIDO (NO FUNCIONA)
+        JSR     SNDPLAY1          ;REPRODUCIR SONIDO
         
    
      
@@ -189,6 +189,8 @@ FIN     MOVEM.L (A7)+,D2-D3
         MOVEM.L (A7)+,D0-D1
    
         RTS
+
+
 
 
 
