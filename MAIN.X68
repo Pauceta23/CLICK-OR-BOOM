@@ -32,12 +32,12 @@ START:
 MENU        
             CLR.B   (LVLNUM)
             JSR     MENUINIT
-.LVL       
+.LVL                              ;BUCLE DEL MENU
             JSR     MOUSINIT
             JSR     READMOU2 
             JSR     LVLCLIC 
             
-            CMP.B   #0,LVLNUM          
+            CMP.B   #0,LVLNUM     ;MIENTRAS NO SE ELIJA UN MENU BUCLE       
             BEQ     .LVL
             
             TRAP    #0
