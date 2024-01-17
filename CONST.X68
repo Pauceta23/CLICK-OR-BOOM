@@ -5,10 +5,9 @@
 ; --- CERCLES RELATED CONSTANTS ------------------------------------------------
 ;RADINIC: 15 RADFINA:
         
-RADINIC EQU 5                   ;CIRCLES INICIAL RADIUS
-RADFINA EQU 100                  ;CIRCLES FINAL RADIUS
-COLFINA EQU $00FFFFFF           ;CIRCLES FINAL COLOR
-CIRCHIT EQU 5                   ;NUMBER OF CIRCLES TO INCREASE GROWTH SPEED
+RADINIC EQU 5                   ;RADIO INICIAL DEL CIRCULO
+RADFINA EQU 100                  ;RADIO FINAL
+COLFINA EQU $00FFFFFF           ;COLOR FINAL (BLANCO)
 RED     EQU $000000FF
 BLACK   EQU $00000000
 BLUE    EQU $00FF0000
@@ -16,13 +15,14 @@ GREEN   EQU $0000FF00
 
 ; --- SCORE RELATED CONSTANTS --------------------------------------------------
 
-SCOFCOL     EQU     $00000000              ; TEXT BACKGROUND COLOR
-SCOLINE1    EQU     $0101                   ; FIRST TEXT LINE COORDINATES
-SCOLINE2    EQU     $0102                   ; SECOND TEXT LINE COORDINATES
+SCOFCOL     EQU     $00000000              ; FONDO DEL TEXTO
+SCOLINE1    EQU     $0101                   ; COORDENADAS PRIMERA LINEA DE TEXTO
+SCOLINE2    EQU     $0102                   ; COORDENADAS SEGUNDA LINEA DE TEXTO
 
 
 
 ; --- RANDOM VECTORS CONSTANTS --------------------------------------------------
+;VECTORES CON NUMEROS ALEATORIOS PARA LOS NIVELES
 LVL1X      
     DC.W      819, 768, 77, 811, 374 
     DC.W      260, 893, 357, 830, 1008 
@@ -184,6 +184,7 @@ LVL3Y
   DC.W        327, 151, 384, 163, 481
   DC.W        397, 375, 311, 124, 371
   DC.W        321, 565, 458, 35, 523
+
 
 
 
