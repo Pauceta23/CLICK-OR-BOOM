@@ -31,6 +31,7 @@ START:
             JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
             JSR     SCOINIT
+            JSR     SNDINIT
             
             ;AFEGIM EL PRIMER CERCLE
             addAgent             
@@ -98,6 +99,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
 
 
 

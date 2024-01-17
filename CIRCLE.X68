@@ -142,6 +142,7 @@ ALIVE:
         
 BOOM    SUBQ.B  #1,(SCOLIFE)    ;RESTA UNA VIDA
         JSR     AGLKILL
+        JSR     SNDPLAY2
         BRA     FIN
         
         MOVE.B  #72,D0          ;REPRODUCIR SONIDO (NO FUNCIONA)
@@ -151,15 +152,15 @@ BOOM    SUBQ.B  #1,(SCOLIFE)    ;RESTA UNA VIDA
 KILL    ADDQ.B  #1,SCONUMB
         JSR     AGLKILL         ;MATA L'AGENT
 
-        MOVE.B  #72,D0          ;REPRODUCIR SONIDO (NO FUNCIONA)
-        CLR.B   D1
-        TRAP    #15
+        JSR     SNDPLAY1          ;REPRODUCIR SONIDO (NO FUNCIONA)
+        
    
      
 FIN     MOVEM.L (A7)+,D2-D3
         MOVEM.L (A7)+,D0-D1
    
         RTS
+
 
 
 
