@@ -5,12 +5,12 @@
 
 SYSINIT:
 
-            JSR     SCRINIT                   ; SYSTEM INIT
+            JSR     SCRINIT                   ; INICIALIZACION DE SYSTEM
             CLR.W   (SCONUMB)
-            MOVE.L  #BUFFUPD,($80)            ; INSTALLS A ROUTINE IN TRAP #0
-            MOVE.L  #SCRUPD, ($64)            ; INSTALLS A TIMED ROUTINE
+            MOVE.L  #BUFFUPD,($80)            ; INSTALAMOS RUTINAS EN TRAP #0
+            MOVE.L  #SCRUPD, ($64)            ; INSTALAMOS UNA RUTINA TEMPORIZADA
             MOVE.W  SR,-(A7)
-            ANDI.W  #$D8FF,(A7)               ; ENABLE INTS            
+            ANDI.W  #$D8FF,(A7)               ; ACTIVAMOS INTERRUPCIONES           
             
             RTE
 RANINIT:
@@ -25,10 +25,10 @@ SNDINIT:
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.L D0-D1/A1-A2,-(A7)
+            MOVEM.L D0-D1/A1-A2,-(A7)       
             CLR.B   D1
             LEA     .SNDLIST,A2
-.LOOP       MOVE.L  (A2)+,D0
+.LOOP       MOVE.L  (A2)+,D0                  ;INICIALIZAMOS SONIDOS Y LOS PONEMOS EN LA LISTA
             BEQ     .DONE
             MOVE.L  D0,A1
             MOVE.B  #71,D0
@@ -50,7 +50,7 @@ SNDPLAY1:
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.L D0-D1,-(A7)
+            MOVEM.L D0-D1,-(A7)               ;SONIDO DE ACIERTO
             MOVE.B  #72,D0
             CLR.B   D1
             TRAP    #15
@@ -66,7 +66,7 @@ SNDPLAY2:
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
-            MOVEM.L D0-D1,-(A7)
+            MOVEM.L D0-D1,-(A7)               ;SONIDO DE FALLO
             MOVE.B  #72,D0
             MOVE.B  #1,D1
             TRAP    #15
@@ -82,28 +82,28 @@ SCRINIT:
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
                         
-            MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1 ; SET RESOLUTION
+            MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1 ; SET RESOLUCION
             MOVE.B  #33,D0
             TRAP    #15
-            MOVE.L  #1,D1                     ; SET WINDOWED MODE
+            MOVE.L  #1,D1                     ; SET MODO VENTANA
             TRAP    #15
             
-            MOVE.W  #$FF00,D1                 ; CLEAR VISIBLE BUFFER
+            MOVE.W  #$FF00,D1                 ; BORRAR VISIBLE BUFFER
             MOVE.B  #11,D0
             TRAP    #15
             
-            MOVE.B  #17,D1                    ; ENABLE DOUBLE BUFFER
+            MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
             MOVE.B  #92,D0
             TRAP    #15
             
-            MOVE.W  #$FF00,D1                 ; CLEAR HIDDEN BUFFER
+            MOVE.W  #$FF00,D1                 ; BORRAR HIDDEN BUFFER
             MOVE.B  #11,D0
             TRAP    #15
             
-            MOVE.B  #32,D0                    ;CREACIÓ DE TIMED INT
+            MOVE.B  #32,D0                    ;CREACIÓN DE TIMED INT
             MOVE.B  #6,D1
             MOVE.B  #$81,D2                   ;8(HABILITAR INT) 1(QUINA INT)
-            MOVE.L  #1000/FRAMRATE,D3         ;FER AQUESTA INT CADA X ms
+            MOVE.L  #1000/FRAMRATE,D3         ;HACER ESTA INT CADA X ms
             TRAP    #15
     
             CLR.B   (SCRINTCT)                                             
@@ -120,11 +120,11 @@ BUFFUPD:
 ; -----------------------------------------------------------------------------
             MOVEM.W D0-D1,-(A7)
             
-            ; SWITCH BUFFERS
+            ; CAMBIAR BUFFERS
             MOVE.B  #94,D0
             TRAP    #15
            
-            ; CLEAR HIDDEN BUFFER
+            ; BORRAR HIDDEN BUFFER
             MOVE.B  #11,D0
             MOVE.W  #$FF00,D1
             TRAP    #15  
@@ -161,61 +161,28 @@ READMOU
             MOVEM.L D2-D3, -(A7)
             CLR.L   D1
             
-            MOVE.W  #61,D0           ;LECTURA DEL RATOLÍ
-            MOVE.B  #2,D1
+            MOVE.W  #61,D0           ;LECTURA DEL RATÓN
+            MOVE.B  MOUSMODE,D1
             TRAP    #15
             
             BTST    #0,D0
             BEQ     .NOCLICAT
             MOVE.B  #1,MOUSCLIC
       
-            MOVE.L  D1, D2           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
+            MOVE.L  D1, D2           ;PROCESO DE EXTRACCIÓN DE LA COORDENADA X
             ANDI.L  #$0000FFFF, D2
-            MOVE.W  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
+            MOVE.W  D2, MOUSCODX     ;GUARDAMOS LA COORDENADA X
             
-            MOVE.L  D1, D3           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA Y
+            MOVE.L  D1, D3           ;PROCESO D'EXTRACCIÓN DE LA COORDENADA Y
             ANDI.L  #$FFFF0000, D3
             LSR.L   #8, D3
             LSR.L   #8, D3
-            MOVE.W  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
+            MOVE.W  D3, MOUSCODY     ;GUARDAMOS LA COORDENADA Y
 .NOCLICAT:             
             MOVEM.L (A7)+, D2-D3            
             MOVEM.L (A7)+, D0-D1
             RTS
-;-----------------------------------------------------------------------------            
-READMOU2
-;READ MOUSE VARIABLES
-;            
-;
-;
-;----------------------------------------------------------------------------- 
-            MOVEM.L D0-D1, -(A7)
-            MOVEM.L D2-D3, -(A7)
-            CLR.L   D1
-            
-            MOVE.W  #61,D0           ;LECTURA DEL RATOLÍ
-            MOVE.B  #0,D1
-            TRAP    #15
-            
-            BTST    #0,D0
-            BEQ     .NOCLICAT
-            MOVE.B  #1,MOUSCLIC
-      
-            MOVE.L  D1, D2           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
-            ANDI.L  #$0000FFFF, D2
-            MOVE.W  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
-            
-            MOVE.L  D1, D3           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA Y
-            ANDI.L  #$FFFF0000, D3
-            LSR.L   #8, D3
-            LSR.L   #8, D3
-            MOVE.W  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
-.NOCLICAT:             
-            MOVEM.L (A7)+, D2-D3            
-            MOVEM.L (A7)+, D0-D1
-            RTS
-            
-            
+
 
 
 
