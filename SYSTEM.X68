@@ -6,11 +6,9 @@
 SYSINIT:
 
             JSR     SCRINIT                   ; SYSTEM INIT
+            CLR.W   (SCONUMB)
             MOVE.L  #BUFFUPD,($80)            ; INSTALLS A ROUTINE IN TRAP #0
             MOVE.L  #SCRUPD, ($64)            ; INSTALLS A TIMED ROUTINE
-            CLR.B   (FRAMCONT)
-            JSR     MOUSINIT
-            MOVE.W   #1,(CIRCVEL)
             MOVE.W  SR,-(A7)
             ANDI.W  #$D8FF,(A7)               ; ENABLE INTS            
             
@@ -163,9 +161,9 @@ MOUSINIT
 ;
 ;----------------------------------------------------------------------------- 
 
-            CLR.W   (MOUSCODX)      
-            CLR.W   (MOUSCODY)    
-            CLR.B   (MOUSCLIC)  
+            CLR.W   MOUSCODX      
+            CLR.W   MOUSCODY    
+            CLR.B   MOUSCLIC  
             
             RTS
 ;-----------------------------------------------------------------------------             
@@ -177,13 +175,14 @@ READMOU
 ;----------------------------------------------------------------------------- 
             MOVEM.L D0-D1, -(A7)
             MOVEM.L D2-D3, -(A7)
+            CLR.L   D1
             
             MOVE.W  #61,D0           ;LECTURA DEL RATOLÍ
-            MOVE.W  #2,D1
+            MOVE.B  #2,D1
             TRAP    #15
             
             BTST    #0,D0
-            BEQ     NOCLICAT
+            BEQ     .NOCLICAT
             MOVE.B  #1,MOUSCLIC
       
             MOVE.L  D1, D2           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
@@ -195,13 +194,46 @@ READMOU
             LSR.L   #8, D3
             LSR.L   #8, D3
             MOVE.W  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
-NOCLICAT:             
+.NOCLICAT:             
             MOVEM.L (A7)+, D2-D3            
             MOVEM.L (A7)+, D0-D1
             RTS
+;-----------------------------------------------------------------------------            
+READMOU2
+;READ MOUSE VARIABLES
+;            
+;
+;
+;----------------------------------------------------------------------------- 
+            MOVEM.L D0-D1, -(A7)
+            MOVEM.L D2-D3, -(A7)
+            CLR.L   D1
+            
+            MOVE.W  #61,D0           ;LECTURA DEL RATOLÍ
+            MOVE.B  #0,D1
+            TRAP    #15
+            
+            BTST    #0,D0
+            BEQ     .NOCLICAT
+            MOVE.B  #1,MOUSCLIC
+      
+            MOVE.L  D1, D2           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA X
+            ANDI.L  #$0000FFFF, D2
+            MOVE.W  D2, MOUSCODX     ;EMMAGATZEMAM LA COORDENADA X
+            
+            MOVE.L  D1, D3           ;PROCÉS D'EXTRACCIÓ DE LA COORDENADA Y
+            ANDI.L  #$FFFF0000, D3
+            LSR.L   #8, D3
+            LSR.L   #8, D3
+            MOVE.W  D3, MOUSCODY     ;EMMAGATZEMAM LA COORDENADA Y
+.NOCLICAT:             
+            MOVEM.L (A7)+, D2-D3            
+            MOVEM.L (A7)+, D0-D1
+            RTS
+            
+            
 
-            
-            
+
 
 
 

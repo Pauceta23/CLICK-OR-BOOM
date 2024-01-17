@@ -9,7 +9,7 @@
             INCLUDE "CONST.X68"
             INCLUDE "LIB/DMMCONST.X68"
             INCLUDE "SYSCONST.X68"
-            ;INCLUDE "MENU.X68"
+            INCLUDE "MENU.X68"
             INCLUDE "CIRCLE.X68"
             INCLUDE "SCORE.X68"
             INCLUDE "SYSTEM.X68"
@@ -17,7 +17,7 @@
             INCLUDE "LIB/AGLCODE.X68"
             INCLUDE "LIB/UTLCODE.X68"
             
-addAgent   MACRO
+addAgent    MACRO
             LEA CIRCINIT,A1
             LEA CIRCUPD,A2
             LEA DRAWCIRC,A3
@@ -29,8 +29,22 @@ START:
 ;---- INITIALIZATION ---------------------------------------------------------
             ORI     #$0700,SR     ;DESACTIVACIÓ DE INTERRUPCIONS I MODE USUARI
             JSR     SYSINIT       ;INICIALITZACIÓ DEL SISTEMA
-            ;JSR     MENUINIT
-;.MENU       BRA     .MENU
+MENU        
+            CLR.B   (LVLNUM)
+            JSR     MENUINIT
+.LVL       
+            JSR     MOUSINIT
+            JSR     READMOU2 
+            JSR     LVLCLIC 
+            
+            CMP.B   #0,LVLNUM          
+            BEQ     .LVL
+            
+            TRAP    #0
+            CLR.W   CIRCVEC
+            MOVE.B  #30, CIRCPAC
+            CLR.B   FRAMCONT
+            MOVE.W  #1, CIRCVEL
             JSR     DMMINIT       ;INICIALITZACIÓ DELS AGENTS (CERCLES)
             JSR     SCOINIT
             JSR     SNDINIT
@@ -38,7 +52,6 @@ START:
             ;AFEGIM EL PRIMER CERCLE
             addAgent             
             
-            ;ADDQ.W  #2,(CIRCVEC)
             CLR.B   (COUNTER)
             
 LOOP:      
@@ -97,6 +110,7 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
 
             CMPI.B  #0,(SCOLIFE)    ;SI LES VIDES NO HAN ARRIBAT A 0
             BNE     LOOP            ;TORNAM CAP AMUNT I CONTINUA EL JOC
+            BRA     MENU
 
             SIMHALT             
             
@@ -107,6 +121,8 @@ WINT        TST.B   (SCRINTCT)    ;BUCLE ON ESPERA FINS QUE ARRIBI LA SENYAL
           
 
             END     START        
+
+
 
 
 
