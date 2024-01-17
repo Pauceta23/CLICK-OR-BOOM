@@ -4,13 +4,13 @@
 * Date       :
 * Description:
 *-----------------------------------------------------------
-*    ORG    $1000
-*START:                  ; first instruction of program
-*            MOVE.L  #1600<<16|800,D1 ; SET RESOLUTION
-*            MOVE.B  #33,D0
-*            TRAP    #15
-*            MOVE.L  #1,D1                     ; SET WINDOWED MODE
-*            TRAP    #15
+    ORG    $1000
+START:                  ; first instruction of program
+            MOVE.L  #1600<<16|800,D1 ; SET RESOLUTION
+            MOVE.B  #33,D0
+            TRAP    #15
+            MOVE.L  #1,D1                     ; SET WINDOWED MODE
+            TRAP    #15
 MENUINIT:            
             JSR     CHANBLUE
 
@@ -109,7 +109,8 @@ LVL2T   DC.B    ' LVL 2',0
 LVL3T   DC.B    ' LVL 3',0
 * Put variables and constants here
 
-*    END    START        ; last line of source
+    END    START        ; last line of source
+
 
 *~Font name~Fixedsys~
 *~Font size~9~
