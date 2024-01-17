@@ -10,11 +10,11 @@ MENUINIT:
             CLR.L   D1
             MOVE.B  (SCONUMB),D1
             MOVE.B  #17,D0
-            TRAP    #15        
+            TRAP    #15      
+  
             JSR     CHANBLUE
-
             
-            MOVE.B  #87,D0
+            MOVE.B  #87,D0                  ;BOTONES DEL MENU
             MOVE.W  #320,D1                 ;LEFT
             MOVE.W  #590,D2                 ;UP   
             MOVE.W  #480,D3                 ;RIGHT
@@ -68,7 +68,7 @@ CHANBLUE:
             TRAP    #15
             
             MOVE.B  #81,D0
-            MOVE.L  #$00FF0000,D1
+            MOVE.L  #BLUE,D1
             TRAP    #15
             RTS
 
@@ -78,7 +78,7 @@ CHANGREE:
             TRAP    #15
             
             MOVE.B  #81,D0
-            MOVE.L  #$0000FF00,D1
+            MOVE.L  #GREEN,D1
             TRAP    #15
             RTS
             
@@ -88,23 +88,23 @@ CHANRED:
             TRAP    #15
             
             MOVE.B  #81,D0
-            MOVE.L  #$000000FF,D1
+            MOVE.L  #RED,D1
             TRAP    #15
             RTS
 
 DRAWLOGO:
-    MOVEM.L D0-D2/A0,-(A7)
-    LEA IMAGE, A0   ; Dirección de inicio de la imagen
-    CLR.L   D2
-    MOVE.W #500, D6  ; Ancho del logo
-    MOVE.W #500, D3  ; Altura del logo
+            MOVEM.L D0-D2/A0,-(A7)
+            LEA IMAGE, A0   ; Dirección de inicio de la imagen
+            CLR.L   D2
+            MOVE.W #500, D6  ; Ancho del logo
+            MOVE.W #500, D3  ; Altura del logo
 
     ; Bucle exterior para recorrer las filas
-    ROW_LOOP:
-        MOVE.L #550,D1
+ROW_LOOP:
+            MOVE.L #550,D1
 
         ; Bucle interior para recorrer los píxeles en la fila
-        PIXEL_LOOP:
+PIXEL_LOOP:
             MOVE.L D0, D4
             MOVE.L D1, D5
             MOVE.B #80, D0
@@ -127,45 +127,45 @@ DRAWLOGO:
             ADDQ.L #1, D2
 
         ; Decrementa el contador de filas
-        SUBQ.L #1, D3
+            SUBQ.L #1, D3
 
         ; Si no hemos llegado al final de la imagen, continúa con la próxima fila
-        BNE ROW_LOOP
+            BNE ROW_LOOP
 
     ; Fin del programa
-    MOVEM.L (A7)+,D0-D2/A0
-    RTS
+            MOVEM.L (A7)+,D0-D2/A0
+            RTS
     
 LVLCLIC:
-    MOVE.W MOUSCODX, D5
-    MOVE.W MOUSCODY, D6
+            MOVE.W MOUSCODX, D5
+            MOVE.W MOUSCODY, D6
     
-    CMP     #590,D6
-    BLT     .NOLVL
-    CMP     #670,D6
-    BGT     .NOLVL  
+            CMP     #590,D6
+            BLT     .NOLVL
+            CMP     #670,D6
+            BGT     .NOLVL  
  
-    CMP     #320,D5
-    BLT     .NOLVL1
-    CMP     #480,D5
-    BGT     .NOLVL1
-    MOVE.B  #1,LVLNUM
-    RTS
+            CMP     #320,D5
+            BLT     .NOLVL1
+            CMP     #480,D5
+            BGT     .NOLVL1
+            MOVE.B  #1,LVLNUM
+            RTS
 .NOLVL1    
-    CMP     #720,D5
-    BLT     .NOLVL2
-    CMP     #880,D5
-    BGT     .NOLVL2
-    MOVE.B  #2,LVLNUM
-    RTS
+            CMP     #720,D5
+            BLT     .NOLVL2
+            CMP     #880,D5
+            BGT     .NOLVL2
+            MOVE.B  #2,LVLNUM
+            RTS
 .NOLVL2
-    CMP     #1120,D5
-    BLT     .NOLVL
-    CMP     #1280,D5
-    BGT     .NOLVL
-    MOVE.B  #3,LVLNUM
+            CMP     #1120,D5
+            BLT     .NOLVL
+            CMP     #1280,D5
+            BGT     .NOLVL
+            MOVE.B  #3,LVLNUM
 .NOLVL
-    RTS
+            RTS
 
 
 LVL1T   DC.B    ' LVL 1',0
