@@ -11,6 +11,8 @@ COLFINA EQU $00FFFFFF           ;CIRCLES FINAL COLOR
 CIRCHIT EQU 5                   ;NUMBER OF CIRCLES TO INCREASE GROWTH SPEED
 RED     EQU $000000FF
 BLACK   EQU $00000000
+BLUE    EQU $00FF0000
+GREEN   EQU $0000FF00
 
 ; --- SCORE RELATED CONSTANTS --------------------------------------------------
 
@@ -182,6 +184,7 @@ LVL3Y
   DC.W        327, 151, 384, 163, 481
   DC.W        397, 375, 311, 124, 371
   DC.W        321, 565, 458, 35, 523
+
 
 
 
