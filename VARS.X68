@@ -4,14 +4,12 @@
 
 ; --- CERCLES RELATED VARIABLES-------------------------------------------------
 
-CIRCVEL DS.W    1           ;CERCLE GROW SPEED
-CIRCPOX DS.W    1           ;CERCLE X COORDINATE
-CIRCPOY DS.W    1           ;CERCLE Y COORDINATE
-CIRCCOL DS.W    1           ;CERCLE COLOR
-CIRCPOS DS.W    1           ; 2(A0)
-;CIRCRAD DS.W    1           ;CERCLE RADIUS     (A0)
-CIRCVEC DS.W    1           ;CIRCLE RANDOM VECTOR 
-CIRCPAC DS.B    1           ;CIRCLE PACE 
+CIRCVEL DS.W    1           ;VELOCIDAD DE CRECIMIENTO
+CIRCPOX DS.W    1           ;COORDENADA X CIRCULO
+CIRCPOY DS.W    1           ;COORDENADA Y
+CIRCCOL DS.W    1           ;CIRCUL0 COLOR
+CIRCVEC DS.W    1           ;VECTOR ALEATORIO CIRCULOS
+CIRCPAC DS.B    1           ;CIRCULO WAIT
         DS.W    0
 
 
@@ -19,14 +17,15 @@ CIRCPAC DS.B    1           ;CIRCLE PACE
 
 ; --- SCOREBOARD RELATED VARIABLES ---------------------------------------------
 
-SCONUMB DS.W    1           ;NUMBER OF CAPTURED CERCLES
-SCOLIFE DS.B    1           ;NUMBER OF LIFES
+SCONUMB DS.W    1           ;NUMBERO DE ACIERTOS
+SCOLIFE DS.B    1           ;NUMBERO DE VIDAS
         DS.W    0
 
 ; --- LEVEL RELATED VARIABLES ---------------------------------------------
 
-LVLNUM  DC.B    0           ;LEVEL CHOOSE
+LVLNUM  DC.B    0           ;NIVEL ESCOGIDO
         DS.W    0
+
 
 
 
