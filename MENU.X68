@@ -1,6 +1,6 @@
 
 MENUINIT:    
-            MOVE.B  #92,D0
+            MOVE.B  #92,D0                  ;DESACTIVAR DOBLE BUFFER
             MOVE.B  #16,D1
             TRAP    #15
             TRAP    #0
@@ -13,7 +13,7 @@ MENUINIT:
             TRAP    #15      
   
             JSR     CHANBLUE
-            
+            ;BOTON 1
             MOVE.B  #87,D0                  ;BOTONES DEL MENU
             MOVE.W  #320,D1                 ;LEFT
             MOVE.W  #590,D2                 ;UP   
@@ -22,19 +22,20 @@ MENUINIT:
             TRAP    #15
             
             JSR     CHANGREE
-            
+            ;BOTON 2
             MOVE.B  #87,D0
             MOVE.W  #720,D1
             MOVE.W  #880,D3
             TRAP    #15
             
             JSR     CHANRED
-            
+            ;BOTON 3
             MOVE.B  #87,D0
             MOVE.W  #1120,D1
             MOVE.W  #1280,D3
             TRAP    #15
 
+            ;LETRAS BOTON 3
             MOVE.B  #95,D0
             MOVE.W  #1170,D1
             MOVE.W  #620,D2
@@ -43,20 +44,26 @@ MENUINIT:
             
             
             JSR     CHANGREE
-            
+            ;LETRAS BOTON 2
             MOVE.B  #95,D0
             MOVE.W  #770,D1
             LEA     LVL2T,A1
             TRAP    #15
             
             JSR     CHANBLUE
-            
+            ;LETRAS BOTON 1
             MOVE.B  #95,D0
             MOVE.W  #370,D1
             LEA     LVL1T,A1
             TRAP    #15
+            ;LETRAS BOTON EXIT
+            MOVE.B  #95,D0
+            MOVE.W  #1400,D1
+            MOVE.W  #0,D2
+            LEA     EXIT,A1
+            TRAP    #15
             
-            MOVE.B  #17,D1                    ; ENABLE DOUBLE BUFFER
+            MOVE.B  #17,D1                    ; ACTIVAR DOUBLE BUFFER
             MOVE.B  #92,D0
             TRAP    #15
             
@@ -94,21 +101,21 @@ CHANRED:
 
 DRAWLOGO:
             MOVEM.L D0-D2/A0,-(A7)
-            LEA IMAGE, A0   ; Dirección de inicio de la imagen
+            LEA IMAGE, A0   ; DIRECCIÓN DE INICIO DE LA IMAGEN
             CLR.L   D2
-            MOVE.W #500, D6  ; Ancho del logo
-            MOVE.W #500, D3  ; Altura del logo
+            MOVE.W #500, D6  ; ANCHO DEL LOGO
+            MOVE.W #500, D3  ; ALTURA
 
-    ; Bucle exterior para recorrer las filas
+            ; BUCLE EXTERIOR PARA RECORRER LAS FILAS
 ROW_LOOP:
             MOVE.L #550,D1
 
-        ; Bucle interior para recorrer los píxeles en la fila
+            ; BUCLE INTERIOR PARA RECORRER LAS COLUMNAS
 PIXEL_LOOP:
             MOVE.L D0, D4
             MOVE.L D1, D5
             MOVE.B #80, D0
-            MOVE.L (A0)+, D1   ; Lee el valor hexadecimal del píxel de la imagen
+            MOVE.L (A0)+, D1   ; LEE EL VALOR HEXADECIMAL DEL PÍXEL DE LA IMAGEN
             TRAP #15
             MOVE.L D4, D0
             MOVE.L D5, D1
@@ -116,26 +123,26 @@ PIXEL_LOOP:
             MOVE.B #82, D0
             TRAP #15
 
-            ; Decrementa el contador de píxeles
+            ; DECREMENTA EL CONTADOR DE PIXELES
             
-
-            ; Si no hemos llegado al final de la fila, continúa con el próximo píxel
+            ;SI NO HEMOS LLEGADO AL FINAL DE LA FILA, CONTINÚA CON EL PRÓXIMO PÍXEL
             ADDQ.L #1, D1
             SUBQ.W #1, D6
             BNE PIXEL_LOOP
             MOVE.W #500, D6
             ADDQ.L #1, D2
 
-        ; Decrementa el contador de filas
+            ; DECREMENTA EL CONTADOR DE FILAS
             SUBQ.L #1, D3
 
-        ; Si no hemos llegado al final de la imagen, continúa con la próxima fila
+            ;SI NO HEMOS LLEGADO AL FINAL DE LA IMAGEN, CONTINÚA CON LA PRÓXIMA FILA
             BNE ROW_LOOP
 
-    ; Fin del programa
+            ; FIN DEL PROGRAMA
             MOVEM.L (A7)+,D0-D2/A0
             RTS
     
+            ;SUBRUTINA ENCARGADA DE COMPROBAR SI SE CLICAN LOS BOTONES DE NIVEL
 LVLCLIC:
             MOVE.W MOUSCODX, D5
             MOVE.W MOUSCODY, D6
@@ -165,16 +172,23 @@ LVLCLIC:
             BGT     .NOLVL
             MOVE.B  #3,LVLNUM
 .NOLVL
-            RTS
+            CMP     #1400,D5
+            BLT     .NOEXIT
+            CMP     #1600,D5
+            BGT     .NOEXIT
+            CMP     #100,D6
+            BGT     .NOEXIT
+            JMP     FFIN
+.NOEXIT     RTS
 
+            ;TEXTOS DEL MENÚ
+LVL1T   DC.W    ' LVL 1',0
+LVL2T   DC.W    ' LVL 2',0
+LVL3T   DC.W    ' LVL 3',0
+SCORT   DC.W    'LAST SCORE: ',0
+EXIT    DC.W    'PRESS HERE TO HALTSIM',0
 
-LVL1T   DC.B    ' LVL 1',0
-LVL2T   DC.B    ' LVL 2',0
-LVL3T   DC.B    ' LVL 3',0
-SCORT   DC.B    'LAST SCORE: ',0
-        DS.W    0
-* Put variables and constants here
-
+            ;BITMAP DE IMAGEN
 IMAGE
 
    DC.L   $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000
@@ -25177,6 +25191,8 @@ IMAGE
    DC.L   $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000
    DC.L   $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000
    DC.L   $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000, $000000
+
+
 
 
 
